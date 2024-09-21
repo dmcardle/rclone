@@ -25,9 +25,9 @@ go_library(
         "//lib/ranges",
         "//lib/readers",
         "//lib/rest",
-        "@org_golang_x_oauth2//:go_default_library",
-        "@org_golang_x_sync//errgroup:go_default_library",
-        "@org_golang_x_sync//semaphore:go_default_library",
+        "@org_golang_x_oauth2//:oauth2",
+        "@org_golang_x_sync//errgroup",
+        "@org_golang_x_sync//semaphore",
     ],
 )
 

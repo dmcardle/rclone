@@ -12,7 +12,7 @@ go_library(
         "//fs/fshttp",
         "//fs/rc",
         "//fs/rc/jobs",
-        "@com_github_spf13_cobra//:go_default_library",
-        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
+        "@com_github_spf13_pflag//:pflag",
     ],
 )

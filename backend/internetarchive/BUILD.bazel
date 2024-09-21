@@ -18,7 +18,7 @@ go_library(
         "//lib/pacer",
         "//lib/random",
         "//lib/rest",
-        "@com_github_ncw_swift_v2//:go_default_library",
+        "@com_github_ncw_swift_v2//:swift",
     ],
 )
 

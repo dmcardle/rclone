@@ -12,7 +12,7 @@ go_library(
         "//fs/fshttp",
         "//fs/hash",
         "//lib/rest",
-        "@org_golang_x_net//html:go_default_library",
+        "@org_golang_x_net//html",
     ],
 )
 
@@ -26,7 +26,7 @@ go_test(
         "//fs/config/configmap",
         "//fstest",
         "//lib/rest",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

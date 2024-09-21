@@ -14,8 +14,8 @@ go_library(
         "//fs/fshttp",
         "//fs/hash",
         "//lib/encoder",
-        "@com_github_koofr_go_httpclient//:go_default_library",
-        "@com_github_koofr_go_koofrclient//:go_default_library",
+        "@com_github_koofr_go_httpclient//:go-httpclient",
+        "@com_github_koofr_go_koofrclient//:go-koofrclient",
     ],
 )
 

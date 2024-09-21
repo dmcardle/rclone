@@ -22,14 +22,14 @@ go_library(
         "//lib/oauthutil",
         "//lib/pacer",
         "//lib/readers",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox:go_default_library",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/auth:go_default_library",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/common:go_default_library",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/files:go_default_library",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/sharing:go_default_library",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/team:go_default_library",
-        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/users:go_default_library",
-        "@org_golang_x_oauth2//:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/auth",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/common",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/files",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/sharing",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/team",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/users",
+        "@org_golang_x_oauth2//:oauth2",
     ],
 )
 
@@ -43,6 +43,6 @@ go_test(
     deps = [
         "//fs",
         "//fstest/fstests",
-        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//assert",
     ],
 )

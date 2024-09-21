@@ -13,7 +13,7 @@ go_library(
         "//lib/file",
         "//lib/random",
         "//lib/readers",
-        "@com_github_spf13_cobra//:go_default_library",
-        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
+        "@com_github_spf13_pflag//:pflag",
     ],
 )

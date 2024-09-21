@@ -14,7 +14,7 @@ go_library(
     deps = [
         "//cmd",
         "//fs",
-        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )
 
@@ -22,5 +22,5 @@ go_test(
     name = "genautocomplete_test",
     srcs = ["genautocomplete_test.go"],
     embed = [":genautocomplete"],
-    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+    deps = ["@com_github_stretchr_testify//assert"],
 )

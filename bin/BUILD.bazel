@@ -5,7 +5,7 @@ go_library(
     srcs = ["not-in-stable.go"],
     importpath = "github.com/rclone/rclone/bin",
     visibility = ["//visibility:private"],
-    deps = ["@com_github_coreos_go_semver//semver:go_default_library"],
+    deps = ["@com_github_coreos_go_semver//semver"],
 )
 
 go_binary(

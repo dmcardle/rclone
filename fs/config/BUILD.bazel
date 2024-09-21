@@ -26,9 +26,9 @@ go_library(
         "//lib/file",
         "//lib/random",
         "//lib/terminal",
-        "@com_github_mitchellh_go_homedir//:go_default_library",
-        "@org_golang_x_crypto//nacl/secretbox:go_default_library",
-        "@org_golang_x_text//unicode/norm:go_default_library",
+        "@com_github_mitchellh_go_homedir//:go-homedir",
+        "@org_golang_x_crypto//nacl/secretbox",
+        "@org_golang_x_text//unicode/norm",
     ],
 )
 
@@ -50,7 +50,7 @@ go_test(
         "//fs/config/configfile",
         "//fs/config/obscure",
         "//fs/rc",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

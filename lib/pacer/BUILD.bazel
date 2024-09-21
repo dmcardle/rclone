@@ -11,7 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//lib/errors",
-        "@org_golang_x_time//rate:go_default_library",
+        "@org_golang_x_time//rate",
     ],
 )
 
@@ -22,5 +22,5 @@ go_test(
         "tokens_test.go",
     ],
     embed = [":pacer"],
-    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+    deps = ["@com_github_stretchr_testify//assert"],
 )

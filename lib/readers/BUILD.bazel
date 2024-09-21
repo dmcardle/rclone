@@ -36,7 +36,7 @@ go_test(
     embed = [":readers"],
     deps = [
         "//lib/random",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

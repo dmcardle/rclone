@@ -11,5 +11,5 @@ go_test(
     name = "pkcs7_test",
     srcs = ["pkcs7_test.go"],
     embed = [":pkcs7"],
-    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+    deps = ["@com_github_stretchr_testify//assert"],
 )

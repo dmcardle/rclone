@@ -20,10 +20,10 @@ go_library(
         "//fs/hash",
         "//lib/readers",
         "//lib/version",
-        "@com_github_max_sum_base32768//:go_default_library",
-        "@com_github_rfjakob_eme//:go_default_library",
-        "@org_golang_x_crypto//nacl/secretbox:go_default_library",
-        "@org_golang_x_crypto//scrypt:go_default_library",
+        "@com_github_max_sum_base32768//:base32768",
+        "@com_github_rfjakob_eme//:eme",
+        "@org_golang_x_crypto//nacl/secretbox",
+        "@org_golang_x_crypto//scrypt",
     ],
 )
 
@@ -48,8 +48,8 @@ go_test(
         "//fstest/fstests",
         "//lib/random",
         "//lib/readers",
-        "@com_github_max_sum_base32768//:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_max_sum_base32768//:base32768",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

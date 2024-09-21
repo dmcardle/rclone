@@ -36,9 +36,9 @@ go_library(
         "//lib/buildinfo",
         "//lib/exitcode",
         "//lib/terminal",
-        "@com_github_spf13_cobra//:go_default_library",
-        "@com_github_spf13_pflag//:go_default_library",
-        "@org_golang_x_text//cases:go_default_library",
-        "@org_golang_x_text//language:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
+        "@com_github_spf13_pflag//:pflag",
+        "@org_golang_x_text//cases",
+        "@org_golang_x_text//language",
     ],
 )

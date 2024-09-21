@@ -10,8 +10,8 @@ go_library(
     importpath = "github.com/rclone/rclone/lib/encoder/filename",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_dop251_scsu//:go_default_library",
-        "@com_github_klauspost_compress//huff0:go_default_library",
+        "@com_github_dop251_scsu//:scsu",
+        "@com_github_klauspost_compress//huff0",
     ],
 )
 

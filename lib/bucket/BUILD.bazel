@@ -11,5 +11,5 @@ go_test(
     name = "bucket_test",
     srcs = ["bucket_test.go"],
     embed = [":bucket"],
-    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+    deps = ["@com_github_stretchr_testify//assert"],
 )

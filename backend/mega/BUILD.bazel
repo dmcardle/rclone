@@ -17,7 +17,7 @@ go_library(
         "//lib/encoder",
         "//lib/pacer",
         "//lib/readers",
-        "@com_github_t3rm1n4l_go_mega//:go_default_library",
+        "@com_github_t3rm1n4l_go_mega//:go-mega",
     ],
 )
 

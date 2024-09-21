@@ -16,8 +16,8 @@ go_library(
         "//lib/encoder",
         "//lib/pacer",
         "//lib/readers",
-        "@com_github_henrybear327_go_proton_api//:go_default_library",
-        "@com_github_henrybear327_proton_api_bridge//:go_default_library",
+        "@com_github_henrybear327_go_proton_api//:go-proton-api",
+        "@com_github_henrybear327_proton_api_bridge//:Proton-API-Bridge",
     ],
 )
 

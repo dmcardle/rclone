@@ -13,7 +13,7 @@ go_library(
         "//fs/hash",
         "//fs/operations",
         "//fs/walk",
-        "@org_golang_x_sync//errgroup:go_default_library",
+        "@org_golang_x_sync//errgroup",
     ],
 )
 
@@ -29,6 +29,6 @@ go_test(
         "//backend/memory",
         "//fstest",
         "//fstest/fstests",
-        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//assert",
     ],
 )

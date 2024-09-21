@@ -11,6 +11,6 @@ go_library(
         "//fs/config",
         "//fs/config/flags",
         "//fs/filter",
-        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )

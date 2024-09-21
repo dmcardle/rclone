@@ -14,8 +14,8 @@ go_library(
         "//fs/walk",
         "//lib/encoder",
         "//lib/terminal",
-        "@com_github_a8m_tree//:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_a8m_tree//:tree",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )
 
@@ -27,8 +27,8 @@ go_test(
         "//backend/local",
         "//fs",
         "//fstest",
-        "@com_github_a8m_tree//:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_a8m_tree//:tree",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

@@ -17,8 +17,8 @@ go_library(
         "//vfs",
         "//vfs/vfscommon",
         "//vfs/vfsflags",
-        "@com_github_go_chi_chi_v5//middleware:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_go_chi_chi_v5//middleware",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )
 
@@ -33,7 +33,7 @@ go_test(
         "//fs",
         "//fs/filter",
         "//lib/http",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

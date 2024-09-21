@@ -9,6 +9,6 @@ go_library(
         "//backend/all",
         "//lib/plugin",
         "//librclone/librclone",
-        "@org_golang_x_mobile//event/key:go_default_library",
+        "@org_golang_x_mobile//event/key",
     ],
 )

@@ -26,14 +26,14 @@ go_library(
         "//vfs",
         "//vfs/vfscommon",
         "//vfs/vfsflags",
-        "@com_github_spf13_cobra//:go_default_library",
-        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
+        "@com_github_spf13_pflag//:pflag",
     ] + select({
         "@io_bazel_rules_go//go/platform:android": [
-            "@com_github_moby_sys_mountinfo//:go_default_library",
+            "@com_github_moby_sys_mountinfo//:mountinfo",
         ],
         "@io_bazel_rules_go//go/platform:linux": [
-            "@com_github_moby_sys_mountinfo//:go_default_library",
+            "@com_github_moby_sys_mountinfo//:mountinfo",
         ],
         "//conditions:default": [],
     }),
@@ -51,7 +51,7 @@ go_test(
         "//fs/config/configfile",
         "//fs/rc",
         "//fstest/testy",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

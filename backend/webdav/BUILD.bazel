@@ -23,7 +23,7 @@ go_library(
         "//lib/pacer",
         "//lib/readers",
         "//lib/rest",
-        "@com_github_azure_go_ntlmssp//:go_default_library",
+        "@com_github_azure_go_ntlmssp//:go-ntlmssp",
     ],
 )
 
@@ -40,7 +40,7 @@ go_test(
         "//fs/config/configmap",
         "//fstest",
         "//fstest/fstests",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

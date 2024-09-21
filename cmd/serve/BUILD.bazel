@@ -16,6 +16,6 @@ go_library(
         "//cmd/serve/s3",
         "//cmd/serve/sftp",
         "//cmd/serve/webdav",
-        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )

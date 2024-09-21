@@ -11,6 +11,6 @@ go_library(
     deps = [
         "//fs",
         "//lib/atexit",
-        "@com_github_coreos_go_systemd_v22//daemon:go_default_library",
+        "@com_github_coreos_go_systemd_v22//daemon",
     ],
 )

@@ -17,9 +17,9 @@ go_library(
         "//fs/config/flags",
         "//lib/atexit",
         "//lib/sdactivation",
-        "@com_github_abbot_go_http_auth//:go_default_library",
-        "@com_github_go_chi_chi_v5//:go_default_library",
-        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_abbot_go_http_auth//:go-http-auth",
+        "@com_github_go_chi_chi_v5//:chi",
+        "@com_github_spf13_pflag//:pflag",
     ],
 )
 
@@ -33,5 +33,5 @@ go_test(
     ],
     data = glob(["testdata/**"]),
     embed = [":http"],
-    deps = ["@com_github_stretchr_testify//require:go_default_library"],
+    deps = ["@com_github_stretchr_testify//require"],
 )

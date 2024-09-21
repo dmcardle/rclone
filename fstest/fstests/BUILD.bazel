@@ -20,7 +20,7 @@ go_library(
         "//lib/encoder",
         "//lib/random",
         "//lib/readers",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

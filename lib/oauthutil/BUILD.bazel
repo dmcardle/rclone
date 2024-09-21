@@ -15,7 +15,7 @@ go_library(
         "//fs/fserrors",
         "//fs/fshttp",
         "//lib/random",
-        "@com_github_skratchdot_open_golang//open:go_default_library",
-        "@org_golang_x_oauth2//:go_default_library",
+        "@com_github_skratchdot_open_golang//open",
+        "@org_golang_x_oauth2//:oauth2",
     ],
 )

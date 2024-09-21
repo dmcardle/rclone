@@ -9,6 +9,6 @@ go_library(
         "//fs",
         "//fs/config",
         "//fs/config/flags",
-        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_spf13_pflag//:pflag",
     ],
 )

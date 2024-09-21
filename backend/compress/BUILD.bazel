@@ -16,8 +16,8 @@ go_library(
         "//fs/log",
         "//fs/object",
         "//fs/operations",
-        "@com_github_buengese_sgzip//:go_default_library",
-        "@com_github_gabriel_vasile_mimetype//:go_default_library",
+        "@com_github_buengese_sgzip//:sgzip",
+        "@com_github_gabriel_vasile_mimetype//:mimetype",
     ],
 )
 

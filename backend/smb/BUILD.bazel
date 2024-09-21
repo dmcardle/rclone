@@ -22,7 +22,7 @@ go_library(
         "//lib/env",
         "//lib/pacer",
         "//lib/readers",
-        "@com_github_cloudsoda_go_smb2//:go_default_library",
+        "@com_github_cloudsoda_go_smb2//:go-smb2",
     ],
 )
 

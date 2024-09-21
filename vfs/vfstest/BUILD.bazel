@@ -30,23 +30,26 @@ go_library(
         "//lib/file",
         "//vfs",
         "//vfs/vfscommon",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ] + select({
         "@io_bazel_rules_go//go/platform:android": [
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:darwin": [
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:freebsd": [
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:ios": [
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:linux": [
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "@org_golang_x_sys//windows",
         ],
         "//conditions:default": [],
     }),

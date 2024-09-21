@@ -27,9 +27,9 @@ go_library(
         "//lib/oauthutil",
         "//lib/pacer",
         "//lib/rest",
-        "@com_github_golang_jwt_jwt_v4//:go_default_library",
-        "@com_github_youmark_pkcs8//:go_default_library",
-        "@org_golang_x_oauth2//:go_default_library",
+        "@com_github_golang_jwt_jwt_v4//:jwt",
+        "@com_github_youmark_pkcs8//:pkcs8",
+        "@org_golang_x_oauth2//:oauth2",
     ],
 )
 

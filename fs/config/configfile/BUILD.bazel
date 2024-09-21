@@ -13,7 +13,7 @@ go_library(
         "//fs",
         "//fs/config",
         "//lib/file",
-        "@com_github_unknwon_goconfig//:go_default_library",
+        "@com_github_unknwon_goconfig//:goconfig",
     ],
 )
 
@@ -23,7 +23,7 @@ go_test(
     embed = [":configfile"],
     deps = [
         "//fs/config",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

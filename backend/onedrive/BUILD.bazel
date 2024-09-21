@@ -31,8 +31,8 @@ go_library(
         "//lib/pacer",
         "//lib/readers",
         "//lib/rest",
-        "@org_golang_x_exp//slices:go_default_library",
-        "@org_golang_x_oauth2//:go_default_library",
+        "@org_golang_x_exp//slices",
+        "@org_golang_x_oauth2//:oauth2",
     ],
 )
 
@@ -51,8 +51,8 @@ go_test(
         "//fstest",
         "//fstest/fstests",
         "//lib/random",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
-        "@org_golang_x_exp//slices:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+        "@org_golang_x_exp//slices",
     ],
 )

@@ -21,10 +21,10 @@ go_library(
         "//lib/http",
         "//lib/http/serve",
         "//lib/random",
-        "@com_github_go_chi_chi_v5//middleware:go_default_library",
-        "@com_github_prometheus_client_golang//prometheus:go_default_library",
-        "@com_github_prometheus_client_golang//prometheus/promhttp:go_default_library",
-        "@com_github_skratchdot_open_golang//open:go_default_library",
+        "@com_github_go_chi_chi_v5//middleware",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promhttp",
+        "@com_github_skratchdot_open_golang//open",
     ],
 )
 
@@ -42,8 +42,8 @@ go_test(
         "//fs/accounting",
         "//fs/config/configfile",
         "//fs/rc",
-        "@com_github_go_chi_chi_v5//:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_go_chi_chi_v5//:chi",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

@@ -40,9 +40,9 @@ go_library(
         "//lib/atexit",
         "//lib/encoder",
         "//lib/terminal",
-        "@com_github_spf13_cobra//:go_default_library",
-        "@org_golang_x_exp//slices:go_default_library",
-        "@org_golang_x_text//unicode/norm:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_golang_x_exp//slices",
+        "@org_golang_x_text//unicode/norm",
     ],
 )
 
@@ -72,10 +72,10 @@ go_test(
         "//lib/encoder",
         "//lib/random",
         "//lib/terminal",
-        "@com_github_pmezard_go_difflib//difflib:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
-        "@in_gopkg_yaml_v2//:go_default_library",
-        "@org_golang_x_text//unicode/norm:go_default_library",
+        "@com_github_pmezard_go_difflib//difflib",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+        "@in_gopkg_yaml_v2//:yaml_v2",
+        "@org_golang_x_text//unicode/norm",
     ],
 )

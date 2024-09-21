@@ -12,7 +12,7 @@ go_test(
     srcs = ["quickxorhash_test.go"],
     embed = [":quickxorhash"],
     deps = [
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

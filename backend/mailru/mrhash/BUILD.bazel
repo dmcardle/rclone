@@ -12,6 +12,6 @@ go_test(
     srcs = ["mrhash_test.go"],
     deps = [
         ":mrhash",
-        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//assert",
     ],
 )

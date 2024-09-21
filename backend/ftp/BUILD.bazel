@@ -20,7 +20,7 @@ go_library(
         "//lib/pacer",
         "//lib/proxy",
         "//lib/readers",
-        "@com_github_jlaffaye_ftp//:go_default_library",
+        "@com_github_jlaffaye_ftp//:ftp",
     ],
 )
 
@@ -38,7 +38,7 @@ go_test(
         "//fstest",
         "//fstest/fstests",
         "//lib/readers",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

@@ -13,6 +13,6 @@ go_library(
         "//fs/rc/rcserver",
         "//lib/http",
         "//lib/systemd",
-        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )

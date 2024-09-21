@@ -11,47 +11,47 @@ go_library(
     deps = select({
         "@io_bazel_rules_go//go/platform:aix": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:android": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:darwin": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:dragonfly": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:freebsd": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:illumos": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:ios": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:linux": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:netbsd": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:openbsd": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "@io_bazel_rules_go//go/platform:solaris": [
             "//fs",
-            "@org_golang_x_sys//unix:go_default_library",
+            "@org_golang_x_sys//unix",
         ],
         "//conditions:default": [],
     }),

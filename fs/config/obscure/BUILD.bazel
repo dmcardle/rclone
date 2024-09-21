@@ -12,5 +12,5 @@ go_test(
     name = "obscure_test",
     srcs = ["obscure_test.go"],
     embed = [":obscure"],
-    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+    deps = ["@com_github_stretchr_testify//assert"],
 )

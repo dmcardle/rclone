@@ -23,6 +23,6 @@ go_test(
         "//fs",
         "//fs/config",
         "//fs/config/configfile",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//require",
     ],
 )

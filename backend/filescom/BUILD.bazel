@@ -16,12 +16,12 @@ go_library(
         "//fs/hash",
         "//lib/encoder",
         "//lib/pacer",
-        "@com_github_files_com_files_sdk_go_v3//:go_default_library",
-        "@com_github_files_com_files_sdk_go_v3//bundle:go_default_library",
-        "@com_github_files_com_files_sdk_go_v3//file:go_default_library",
-        "@com_github_files_com_files_sdk_go_v3//filemigration:go_default_library",
-        "@com_github_files_com_files_sdk_go_v3//folder:go_default_library",
-        "@com_github_files_com_files_sdk_go_v3//session:go_default_library",
+        "@com_github_files_com_files_sdk_go_v3//:files-sdk-go",
+        "@com_github_files_com_files_sdk_go_v3//bundle",
+        "@com_github_files_com_files_sdk_go_v3//file",
+        "@com_github_files_com_files_sdk_go_v3//filemigration",
+        "@com_github_files_com_files_sdk_go_v3//folder",
+        "@com_github_files_com_files_sdk_go_v3//session",
     ],
 )
 

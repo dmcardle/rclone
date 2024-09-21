@@ -24,7 +24,7 @@ go_library(
         "//lib/pacer",
         "//lib/random",
         "//lib/readers",
-        "@com_github_ncw_swift_v2//:go_default_library",
+        "@com_github_ncw_swift_v2//:swift",
     ],
 )
 
@@ -44,8 +44,8 @@ go_test(
         "//fstest/fstests",
         "//lib/random",
         "//lib/readers",
-        "@com_github_ncw_swift_v2//:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_ncw_swift_v2//:swift",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )
