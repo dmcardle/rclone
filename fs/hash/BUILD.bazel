@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "hash",
+    srcs = ["hash.go"],
+    importpath = "github.com/rclone/rclone/fs/hash",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_jzelinskie_whirlpool//:go_default_library"],
+)
+
+go_test(
+    name = "hash_test",
+    srcs = ["hash_test.go"],
+    deps = [
+        ":hash",
+        "//fs",
+        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

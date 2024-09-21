@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mockfs",
+    srcs = ["mockfs.go"],
+    importpath = "github.com/rclone/rclone/fstest/mockfs",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/hash",
+    ],
+)

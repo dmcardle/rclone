@@ -1,0 +1,49 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "rc",
+    srcs = [
+        "cache.go",
+        "config.go",
+        "internal.go",
+        "params.go",
+        "rc.go",
+        "registry.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/rc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/obscure",
+        "//fs/filter",
+        "//fs/fspath",
+        "//lib/atexit",
+        "//lib/buildinfo",
+        "//lib/debug",
+        "//lib/http",
+        "@com_github_coreos_go_semver//semver:go_default_library",
+    ],
+)
+
+go_test(
+    name = "rc_test",
+    srcs = [
+        "cache_test.go",
+        "config_test.go",
+        "internal_test.go",
+        "params_test.go",
+        "rc_test.go",
+    ],
+    embed = [":rc"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config/obscure",
+        "//fs/filter",
+        "//fstest/mockfs",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

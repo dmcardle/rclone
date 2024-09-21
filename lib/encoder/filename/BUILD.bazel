@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "filename",
+    srcs = [
+        "decode.go",
+        "encode.go",
+        "init.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/encoder/filename",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_dop251_scsu//:go_default_library",
+        "@com_github_klauspost_compress//huff0:go_default_library",
+    ],
+)
+
+go_test(
+    name = "filename_test",
+    srcs = ["decode_test.go"],
+    embed = [":filename"],
+)

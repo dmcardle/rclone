@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "configfile",
+    srcs = [
+        "configfile.go",
+        "configfile_other.go",
+        "configfile_unix.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/config/configfile",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//lib/file",
+        "@com_github_unknwon_goconfig//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "configfile_test",
+    srcs = ["configfile_test.go"],
+    embed = [":configfile"],
+    deps = [
+        "//fs/config",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "list",
+    srcs = ["list.go"],
+    importpath = "github.com/rclone/rclone/fs/list",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/filter",
+    ],
+)
+
+go_test(
+    name = "list_test",
+    srcs = ["list_test.go"],
+    embed = [":list"],
+    deps = [
+        "//fs",
+        "//fstest/mockdir",
+        "//fstest/mockobject",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "driveletter",
+    srcs = [
+        "driveletter.go",
+        "driveletter_windows.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/driveletter",
+    visibility = ["//visibility:public"],
+)

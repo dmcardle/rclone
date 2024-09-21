@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "genautocomplete",
+    srcs = [
+        "genautocomplete.go",
+        "genautocomplete_bash.go",
+        "genautocomplete_fish.go",
+        "genautocomplete_powershell.go",
+        "genautocomplete_zsh.go",
+    ],
+    importpath = "github.com/rclone/rclone/cmd/genautocomplete",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "genautocomplete_test",
+    srcs = ["genautocomplete_test.go"],
+    embed = [":genautocomplete"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)

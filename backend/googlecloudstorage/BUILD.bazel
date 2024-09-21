@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "googlecloudstorage",
+    srcs = ["googlecloudstorage.go"],
+    importpath = "github.com/rclone/rclone/backend/googlecloudstorage",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/walk",
+        "//lib/bucket",
+        "//lib/encoder",
+        "//lib/env",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "@org_golang_google_api//googleapi:go_default_library",
+        "@org_golang_google_api//option:go_default_library",
+        "@org_golang_google_api//storage/v1:go_default_library",
+        "@org_golang_x_oauth2//:go_default_library",
+        "@org_golang_x_oauth2//google:go_default_library",
+    ],
+)
+
+go_test(
+    name = "googlecloudstorage_test",
+    srcs = ["googlecloudstorage_test.go"],
+    deps = [
+        ":googlecloudstorage",
+        "//fstest",
+        "//fstest/fstests",
+    ],
+)

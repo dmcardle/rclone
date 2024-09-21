@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "js_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/rclone/rclone/fs/rc/js",
+    visibility = ["//visibility:private"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:js": [
+            "//backend/memory",
+            "//fs",
+            "//fs/operations",
+            "//fs/rc",
+            "//fs/sync",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_binary(
+    name = "js",
+    embed = [":js_lib"],
+    visibility = ["//visibility:public"],
+)

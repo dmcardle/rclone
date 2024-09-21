@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "http",
+    srcs = [
+        "auth.go",
+        "context.go",
+        "middleware.go",
+        "server.go",
+        "template.go",
+    ],
+    embedsrcs = ["templates/index.html"],
+    importpath = "github.com/rclone/rclone/lib/http",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/flags",
+        "//lib/atexit",
+        "//lib/sdactivation",
+        "@com_github_abbot_go_http_auth//:go_default_library",
+        "@com_github_go_chi_chi_v5//:go_default_library",
+        "@com_github_spf13_pflag//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "http_test",
+    srcs = [
+        "auth_test.go",
+        "middleware_test.go",
+        "server_test.go",
+        "template_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":http"],
+    deps = ["@com_github_stretchr_testify//require:go_default_library"],
+)

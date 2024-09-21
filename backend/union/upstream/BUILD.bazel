@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "upstream",
+    srcs = ["upstream.go"],
+    importpath = "github.com/rclone/rclone/backend/union/upstream",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/union/common",
+        "//fs",
+        "//fs/cache",
+        "//fs/fspath",
+        "//fs/operations",
+    ],
+)

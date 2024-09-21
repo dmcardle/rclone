@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "linkbox",
+    srcs = ["linkbox.go"],
+    importpath = "github.com/rclone/rclone/backend/linkbox",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "linkbox_test",
+    srcs = ["linkbox_test.go"],
+    deps = [
+        ":linkbox",
+        "//fstest/fstests",
+    ],
+)

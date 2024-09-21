@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "chunksize",
+    srcs = ["chunksize.go"],
+    importpath = "github.com/rclone/rclone/fs/chunksize",
+    visibility = ["//visibility:public"],
+    deps = ["//fs"],
+)
+
+go_test(
+    name = "chunksize_test",
+    srcs = ["chunksize_test.go"],
+    embed = [":chunksize"],
+    deps = ["//fs"],
+)

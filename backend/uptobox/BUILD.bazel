@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "uptobox",
+    srcs = ["uptobox.go"],
+    importpath = "github.com/rclone/rclone/backend/uptobox",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/uptobox/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/random",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "uptobox_test",
+    srcs = ["uptobox_test.go"],
+    deps = [
+        ":uptobox",
+        "//fstest",
+        "//fstest/fstests",
+    ],
+)

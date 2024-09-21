@@ -1,0 +1,51 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "swift",
+    srcs = [
+        "auth.go",
+        "swift.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/swift",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/operations",
+        "//fs/walk",
+        "//lib/atexit",
+        "//lib/bucket",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_ncw_swift_v2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "swift_test",
+    srcs = [
+        "swift_internal_test.go",
+        "swift_test.go",
+    ],
+    embed = [":swift"],
+    deps = [
+        "//fs",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//fs/object",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_ncw_swift_v2//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

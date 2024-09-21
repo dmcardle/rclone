@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "webgui",
+    srcs = [
+        "plugins.go",
+        "rc.go",
+        "webgui.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/rc/webgui",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/rc",
+        "//lib/file",
+    ],
+)
+
+go_test(
+    name = "webgui_test",
+    srcs = ["rc_test.go"],
+    embed = [":webgui"],
+    deps = [
+        "//fs/rc",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

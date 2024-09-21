@@ -1,0 +1,150 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "kv",
+    srcs = [
+        "bolt.go",
+        "types.go",
+        "unsupported.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/kv",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//fs",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//fs",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//fs",
+            "//fs/config",
+            "//lib/encoder",
+            "@io_etcd_go_bbolt//:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_test(
+    name = "kv_test",
+    srcs = ["internal_test.go"],
+    embed = [":kv"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "@com_github_stretchr_testify//assert:go_default_library",
+            "@com_github_stretchr_testify//require:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "mrhash",
+    srcs = ["mrhash.go"],
+    importpath = "github.com/rclone/rclone/backend/mailru/mrhash",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "mrhash_test",
+    srcs = ["mrhash_test.go"],
+    deps = [
+        ":mrhash",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "policy",
+    srcs = [
+        "all.go",
+        "epall.go",
+        "epff.go",
+        "eplfs.go",
+        "eplno.go",
+        "eplus.go",
+        "epmfs.go",
+        "eprand.go",
+        "ff.go",
+        "lfs.go",
+        "lno.go",
+        "lus.go",
+        "mfs.go",
+        "newest.go",
+        "policy.go",
+        "rand.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/union/policy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/union/upstream",
+        "//fs",
+    ],
+)

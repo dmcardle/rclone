@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "protondrive",
+    srcs = ["protondrive.go"],
+    importpath = "github.com/rclone/rclone/backend/protondrive",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/readers",
+        "@com_github_henrybear327_go_proton_api//:go_default_library",
+        "@com_github_henrybear327_proton_api_bridge//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "protondrive_test",
+    srcs = ["protondrive_test.go"],
+    deps = [
+        ":protondrive",
+        "//fstest/fstests",
+    ],
+)

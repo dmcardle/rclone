@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "ftp",
+    srcs = ["ftp.go"],
+    importpath = "github.com/rclone/rclone/backend/ftp",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/env",
+        "//lib/pacer",
+        "//lib/proxy",
+        "//lib/readers",
+        "@com_github_jlaffaye_ftp//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "ftp_test",
+    srcs = [
+        "ftp_internal_test.go",
+        "ftp_test.go",
+    ],
+    embed = [":ftp"],
+    deps = [
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/object",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/readers",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

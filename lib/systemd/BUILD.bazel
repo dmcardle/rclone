@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "systemd",
+    srcs = [
+        "doc.go",
+        "notify.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/systemd",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//lib/atexit",
+        "@com_github_coreos_go_systemd_v22//daemon:go_default_library",
+    ],
+)

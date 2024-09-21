@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "servetest",
+    srcs = ["servetest.go"],
+    importpath = "github.com/rclone/rclone/cmd/serve/servetest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd/serve/proxy/proxyflags",
+        "//fs",
+        "//fs/config/configmap",
+        "//fstest",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

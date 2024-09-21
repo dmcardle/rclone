@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pool",
+    srcs = [
+        "pool.go",
+        "reader_writer.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/pool",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//lib/mmap",
+    ],
+)
+
+go_test(
+    name = "pool_test",
+    srcs = [
+        "pool_test.go",
+        "reader_writer_test.go",
+    ],
+    embed = [":pool"],
+    deps = [
+        "//fstest/testy",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

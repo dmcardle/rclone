@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "compress",
+    srcs = ["compress.go"],
+    importpath = "github.com/rclone/rclone/backend/compress",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/chunkedreader",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fspath",
+        "//fs/hash",
+        "//fs/log",
+        "//fs/object",
+        "//fs/operations",
+        "@com_github_buengese_sgzip//:go_default_library",
+        "@com_github_gabriel_vasile_mimetype//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "compress_test",
+    srcs = ["compress_test.go"],
+    embed = [":compress"],
+    deps = [
+        "//backend/drive",
+        "//backend/local",
+        "//backend/s3",
+        "//backend/swift",
+        "//fstest",
+        "//fstest/fstests",
+    ],
+)

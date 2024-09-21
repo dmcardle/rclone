@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "test_vfs_lib",
+    srcs = ["test_vfs.go"],
+    importpath = "github.com/rclone/rclone/vfs/test_vfs",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//fs",
+        "//lib/file",
+        "//lib/random",
+    ],
+)
+
+go_binary(
+    name = "test_vfs",
+    embed = [":test_vfs_lib"],
+    visibility = ["//visibility:public"],
+)

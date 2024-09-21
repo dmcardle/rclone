@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "readers",
+    srcs = [
+        "context.go",
+        "counting_reader.go",
+        "error.go",
+        "fakeseeker.go",
+        "gzip.go",
+        "limited.go",
+        "noclose.go",
+        "noseeker.go",
+        "pattern_reader.go",
+        "readfill.go",
+        "repeatable.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/readers",
+    visibility = ["//visibility:public"],
+    deps = ["//fs"],
+)
+
+go_test(
+    name = "readers_test",
+    srcs = [
+        "context_test.go",
+        "error_test.go",
+        "fakeseeker_test.go",
+        "gzip_test.go",
+        "noclose_test.go",
+        "noseeker_test.go",
+        "pattern_reader_test.go",
+        "readfill_test.go",
+        "repeatable_test.go",
+    ],
+    embed = [":readers"],
+    deps = [
+        "//lib/random",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

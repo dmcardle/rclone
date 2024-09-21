@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "sugarsync",
+    srcs = ["sugarsync.go"],
+    importpath = "github.com/rclone/rclone/backend/sugarsync",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/sugarsync/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "sugarsync_test",
+    srcs = [
+        "sugarsync_internal_test.go",
+        "sugarsync_test.go",
+    ],
+    embed = [":sugarsync"],
+    deps = [
+        "//fstest/fstests",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

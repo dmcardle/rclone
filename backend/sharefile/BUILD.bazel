@@ -1,0 +1,41 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "sharefile",
+    srcs = [
+        "sharefile.go",
+        "tzdata_vfsdata.go",
+        "upload.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/sharefile",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/sharefile/api",
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/random",
+        "//lib/readers",
+        "//lib/rest",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "sharefile_test",
+    srcs = ["sharefile_test.go"],
+    embed = [":sharefile"],
+    deps = [
+        "//fs",
+        "//fstest/fstests",
+    ],
+)

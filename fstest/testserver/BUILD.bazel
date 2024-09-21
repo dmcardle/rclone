@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "testserver",
+    srcs = ["testserver.go"],
+    importpath = "github.com/rclone/rclone/fstest/testserver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/fspath",
+    ],
+)

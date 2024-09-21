@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "chunker",
+    srcs = ["chunker.go"],
+    importpath = "github.com/rclone/rclone/backend/chunker",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fspath",
+        "//fs/hash",
+        "//fs/operations",
+        "//lib/encoder",
+    ],
+)
+
+go_test(
+    name = "chunker_test",
+    srcs = [
+        "chunker_internal_test.go",
+        "chunker_test.go",
+    ],
+    embed = [":chunker"],
+    deps = [
+        "//backend/all",
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/fspath",
+        "//fs/hash",
+        "//fs/object",
+        "//fs/operations",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/random",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

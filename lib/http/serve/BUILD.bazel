@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "serve",
+    srcs = [
+        "dir.go",
+        "serve.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/http/serve",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "serve_test",
+    srcs = [
+        "dir_test.go",
+        "serve_test.go",
+    ],
+    embed = [":serve"],
+    deps = [
+        "//fstest/mockobject",
+        "//lib/http",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cryptcheck",
+    srcs = ["cryptcheck.go"],
+    importpath = "github.com/rclone/rclone/cmd/cryptcheck",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/crypt",
+        "//cmd",
+        "//cmd/check",
+        "//fs",
+        "//fs/hash",
+        "//fs/operations",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)

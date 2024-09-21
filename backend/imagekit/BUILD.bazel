@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "imagekit",
+    srcs = [
+        "imagekit.go",
+        "util.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/imagekit",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/imagekit/client",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/readers",
+        "//lib/version",
+    ],
+)
+
+go_test(
+    name = "imagekit_test",
+    srcs = ["imagekit_test.go"],
+    embed = [":imagekit"],
+    deps = [
+        "//fstest",
+        "//fstest/fstests",
+    ],
+)

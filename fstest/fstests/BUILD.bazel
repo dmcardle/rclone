@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "fstests",
+    srcs = ["fstests.go"],
+    importpath = "github.com/rclone/rclone/fstest/fstests",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config",
+        "//fs/fserrors",
+        "//fs/fspath",
+        "//fs/hash",
+        "//fs/object",
+        "//fs/operations",
+        "//fs/walk",
+        "//fstest",
+        "//fstest/testserver",
+        "//lib/encoder",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

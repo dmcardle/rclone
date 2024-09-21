@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "premiumizeme",
+    srcs = ["premiumizeme.go"],
+    importpath = "github.com/rclone/rclone/backend/premiumizeme",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/premiumizeme/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/random",
+        "//lib/rest",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "premiumizeme_test",
+    srcs = ["premiumizeme_test.go"],
+    deps = [
+        ":premiumizeme",
+        "//fstest/fstests",
+    ],
+)

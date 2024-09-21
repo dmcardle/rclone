@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "encoder",
+    srcs = [
+        "encoder.go",
+        "os_darwin.go",
+        "os_other.go",
+        "os_windows.go",
+        "standard.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/encoder",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "encoder_test",
+    srcs = [
+        "encoder_cases_test.go",
+        "encoder_test.go",
+    ],
+    embed = [":encoder"],
+    deps = [
+        "@com_github_spf13_pflag//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

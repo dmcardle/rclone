@@ -1,0 +1,54 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "b2",
+    srcs = [
+        "b2.go",
+        "upload.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/b2",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/b2/api",
+        "//fs",
+        "//fs/accounting",
+        "//fs/chunksize",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/walk",
+        "//lib/atexit",
+        "//lib/bucket",
+        "//lib/encoder",
+        "//lib/multipart",
+        "//lib/pacer",
+        "//lib/pool",
+        "//lib/rest",
+        "@org_golang_x_sync//errgroup:go_default_library",
+    ],
+)
+
+go_test(
+    name = "b2_test",
+    srcs = [
+        "b2_internal_test.go",
+        "b2_test.go",
+    ],
+    embed = [":b2"],
+    deps = [
+        "//backend/b2/api",
+        "//fs",
+        "//fs/cache",
+        "//fs/hash",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/bucket",
+        "//lib/random",
+        "//lib/version",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

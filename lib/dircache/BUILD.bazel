@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "dircache",
+    srcs = ["dircache.go"],
+    importpath = "github.com/rclone/rclone/lib/dircache",
+    visibility = ["//visibility:public"],
+    deps = ["//fs"],
+)

@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "logflags",
+    srcs = ["logflags.go"],
+    importpath = "github.com/rclone/rclone/fs/log/logflags",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs/config/flags",
+        "//fs/log",
+        "@com_github_spf13_pflag//:go_default_library",
+    ],
+)

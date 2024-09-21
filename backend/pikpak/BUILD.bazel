@@ -1,0 +1,46 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pikpak",
+    srcs = [
+        "helper.go",
+        "pikpak.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/pikpak",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/pikpak/api",
+        "//fs",
+        "//fs/accounting",
+        "//fs/chunksize",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/atexit",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/random",
+        "//lib/rest",
+        "@com_github_aws_aws_sdk_go_v2//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_config//:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_credentials//:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_feature_s3_manager//:go_default_library",
+        "@com_github_aws_aws_sdk_go_v2_service_s3//:go_default_library",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "pikpak_test",
+    srcs = ["pikpak_test.go"],
+    deps = [
+        ":pikpak",
+        "//fstest/fstests",
+    ],
+)

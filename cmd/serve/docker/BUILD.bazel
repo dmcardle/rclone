@@ -1,0 +1,65 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "docker",
+    srcs = [
+        "api.go",
+        "docker.go",
+        "driver.go",
+        "options.go",
+        "serve.go",
+        "systemd.go",
+        "systemd_unsupported.go",
+        "unix.go",
+        "unix_unsupported.go",
+        "volume.go",
+    ],
+    embedsrcs = ["docker.md"],
+    importpath = "github.com/rclone/rclone/cmd/serve/docker",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/mountlib",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/flags",
+        "//fs/fspath",
+        "//fs/rc",
+        "//lib/atexit",
+        "//lib/file",
+        "//vfs",
+        "//vfs/vfscommon",
+        "//vfs/vfsflags",
+        "@com_github_coreos_go_systemd_v22//daemon:go_default_library",
+        "@com_github_go_chi_chi_v5//:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_pflag//:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:linux": [
+            "@com_github_coreos_go_systemd_v22//activation:go_default_library",
+            "@com_github_coreos_go_systemd_v22//util:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_test(
+    name = "docker_test",
+    srcs = ["docker_test.go"],
+    deps = [
+        ":docker",
+        "//backend/local",
+        "//backend/memory",
+        "//cmd/cmount",
+        "//cmd/mount",
+        "//cmd/mountlib",
+        "//fs",
+        "//fs/config",
+        "//fstest",
+        "//fstest/testy",
+        "//lib/file",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "downloaders",
+    srcs = ["downloaders.go"],
+    importpath = "github.com/rclone/rclone/vfs/vfscache/downloaders",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/asyncreader",
+        "//fs/chunkedreader",
+        "//fs/fserrors",
+        "//lib/ranges",
+        "//vfs/vfscommon",
+    ],
+)
+
+go_test(
+    name = "downloaders_test",
+    srcs = ["downloaders_test.go"],
+    embed = [":downloaders"],
+    deps = [
+        "//backend/local",
+        "//fs/operations",
+        "//fstest",
+        "//lib/ranges",
+        "//lib/readers",
+        "//vfs/vfscommon",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

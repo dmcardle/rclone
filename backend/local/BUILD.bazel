@@ -1,0 +1,125 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "local",
+    srcs = [
+        "about_unix.go",
+        "about_windows.go",
+        "clone_darwin.go",
+        "fadvise_other.go",
+        "fadvise_unix.go",
+        "lchtimes.go",
+        "lchtimes_unix.go",
+        "local.go",
+        "metadata.go",
+        "metadata_bsd.go",
+        "metadata_linux.go",
+        "metadata_other.go",
+        "metadata_unix.go",
+        "metadata_windows.go",
+        "read_device_other.go",
+        "read_device_unix.go",
+        "remove_other.go",
+        "remove_windows.go",
+        "setbtime.go",
+        "setbtime_windows.go",
+        "symlink.go",
+        "symlink_other.go",
+        "xattr.go",
+        "xattr_unsupported.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/local",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/filter",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/file",
+        "//lib/readers",
+        "@org_golang_x_text//unicode/norm:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "@com_github_pkg_xattr//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "@com_github_pkg_xattr//:go_default_library",
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "@com_github_pkg_xattr//:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_test(
+    name = "local_test",
+    srcs = [
+        "local_internal_test.go",
+        "local_test.go",
+        "remove_test.go",
+        "tests_test.go",
+    ],
+    embed = [":local"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/config/configmap",
+        "//fs/filter",
+        "//fs/hash",
+        "//fs/object",
+        "//fs/operations",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/encoder",
+        "//lib/file",
+        "//lib/readers",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

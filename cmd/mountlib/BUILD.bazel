@@ -1,0 +1,57 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "mountlib",
+    srcs = [
+        "check_linux.go",
+        "check_other.go",
+        "mount.go",
+        "rc.go",
+        "sighup.go",
+        "sighup_unsupported.go",
+        "utils.go",
+    ],
+    embedsrcs = ["mount.md"],
+    importpath = "github.com/rclone/rclone/cmd/mountlib",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "//fs/config",
+        "//fs/config/flags",
+        "//fs/rc",
+        "//lib/atexit",
+        "//lib/daemonize",
+        "//lib/systemd",
+        "//vfs",
+        "//vfs/vfscommon",
+        "//vfs/vfsflags",
+        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_pflag//:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "@com_github_moby_sys_mountinfo//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "@com_github_moby_sys_mountinfo//:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_test(
+    name = "mountlib_test",
+    srcs = ["rc_test.go"],
+    deps = [
+        ":mountlib",
+        "//backend/local",
+        "//cmd/cmount",
+        "//cmd/mount",
+        "//cmd/mount2",
+        "//fs/config/configfile",
+        "//fs/rc",
+        "//fstest/testy",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "ranges",
+    srcs = ["ranges.go"],
+    importpath = "github.com/rclone/rclone/lib/ranges",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "ranges_test",
+    srcs = ["ranges_test.go"],
+    embed = [":ranges"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)

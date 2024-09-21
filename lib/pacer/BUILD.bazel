@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pacer",
+    srcs = [
+        "pacer.go",
+        "pacers.go",
+        "tokens.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/pacer",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//lib/errors",
+        "@org_golang_x_time//rate:go_default_library",
+    ],
+)
+
+go_test(
+    name = "pacer_test",
+    srcs = [
+        "pacer_test.go",
+        "tokens_test.go",
+    ],
+    embed = [":pacer"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)

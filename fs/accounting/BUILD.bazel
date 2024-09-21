@@ -1,0 +1,55 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "accounting",
+    srcs = [
+        "accounting.go",
+        "accounting_other.go",
+        "accounting_unix.go",
+        "inprogress.go",
+        "prometheus.go",
+        "stats.go",
+        "stats_groups.go",
+        "token_bucket.go",
+        "tpslimit.go",
+        "transfer.go",
+        "transfermap.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/accounting",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/asyncreader",
+        "//fs/fserrors",
+        "//fs/rc",
+        "//lib/terminal",
+        "@com_github_prometheus_client_golang//prometheus:go_default_library",
+        "@org_golang_x_time//rate:go_default_library",
+    ],
+)
+
+go_test(
+    name = "accounting_test",
+    srcs = [
+        "accounting_test.go",
+        "stats_groups_test.go",
+        "stats_test.go",
+        "token_bucket_test.go",
+        "tpslimit_test.go",
+        "transfer_test.go",
+    ],
+    embed = [":accounting"],
+    deps = [
+        "//fs",
+        "//fs/asyncreader",
+        "//fs/fserrors",
+        "//fs/rc",
+        "//fstest/mockfs",
+        "//fstest/mockobject",
+        "//fstest/testy",
+        "//lib/readers",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+        "@org_golang_x_time//rate:go_default_library",
+    ],
+)

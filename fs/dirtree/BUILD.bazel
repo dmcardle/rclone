@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "dirtree",
+    srcs = ["dirtree.go"],
+    importpath = "github.com/rclone/rclone/fs/dirtree",
+    visibility = ["//visibility:public"],
+    deps = ["//fs"],
+)
+
+go_test(
+    name = "dirtree_test",
+    srcs = ["dirtree_test.go"],
+    embed = [":dirtree"],
+    deps = [
+        "//fstest/mockdir",
+        "//fstest/mockobject",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

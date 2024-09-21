@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "proxyflags",
+    srcs = ["proxyflags.go"],
+    importpath = "github.com/rclone/rclone/cmd/serve/proxy/proxyflags",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd/serve/proxy",
+        "//fs/config/flags",
+        "@com_github_spf13_pflag//:go_default_library",
+    ],
+)

@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "hidrive",
+    srcs = [
+        "helpers.go",
+        "hidrive.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/hidrive",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/hidrive/api",
+        "//backend/hidrive/hidrivehash",
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/ranges",
+        "//lib/readers",
+        "//lib/rest",
+        "@org_golang_x_oauth2//:go_default_library",
+        "@org_golang_x_sync//errgroup:go_default_library",
+        "@org_golang_x_sync//semaphore:go_default_library",
+    ],
+)
+
+go_test(
+    name = "hidrive_test",
+    srcs = ["hidrive_test.go"],
+    embed = [":hidrive"],
+    deps = [
+        "//fs",
+        "//fstest/fstests",
+    ],
+)

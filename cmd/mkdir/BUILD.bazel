@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mkdir",
+    srcs = ["mkdir.go"],
+    importpath = "github.com/rclone/rclone/cmd/mkdir",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "//fs/operations",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)

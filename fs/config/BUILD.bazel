@@ -1,0 +1,56 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "config",
+    srcs = [
+        "authorize.go",
+        "config.go",
+        "config_read_password.go",
+        "config_read_password_unsupported.go",
+        "crypt.go",
+        "default_storage.go",
+        "rc.go",
+        "ui.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/driveletter",
+        "//fs/fspath",
+        "//fs/rc",
+        "//lib/file",
+        "//lib/random",
+        "//lib/terminal",
+        "@com_github_mitchellh_go_homedir//:go_default_library",
+        "@org_golang_x_crypto//nacl/secretbox:go_default_library",
+        "@org_golang_x_text//unicode/norm:go_default_library",
+    ],
+)
+
+go_test(
+    name = "config_test",
+    srcs = [
+        "config_test.go",
+        "crypt_internal_test.go",
+        "crypt_test.go",
+        "default_storage_test.go",
+        "rc_test.go",
+        "ui_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":config"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fs/config/configfile",
+        "//fs/config/obscure",
+        "//fs/rc",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

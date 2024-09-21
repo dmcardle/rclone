@@ -1,0 +1,52 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "sync",
+    srcs = [
+        "pipe.go",
+        "rc.go",
+        "sync.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/sync",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/filter",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//fs/march",
+        "//fs/operations",
+        "//fs/rc",
+        "//lib/errcount",
+        "@com_github_aalpar_deheap//:go_default_library",
+        "@org_golang_x_sync//errgroup:go_default_library",
+    ],
+)
+
+go_test(
+    name = "sync_test",
+    srcs = [
+        "pipe_test.go",
+        "rc_test.go",
+        "sync_test.go",
+    ],
+    embed = [":sync"],
+    deps = [
+        "//backend/all",
+        "//cmd/bisync/bilib",
+        "//fs",
+        "//fs/accounting",
+        "//fs/cache",
+        "//fs/filter",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//fs/operations",
+        "//fs/rc",
+        "//fstest",
+        "//fstest/mockobject",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+        "@org_golang_x_text//unicode/norm:go_default_library",
+    ],
+)

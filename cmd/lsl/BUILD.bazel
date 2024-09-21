@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "lsl",
+    srcs = ["lsl.go"],
+    importpath = "github.com/rclone/rclone/cmd/lsl",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/ls/lshelp",
+        "//fs/operations",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)

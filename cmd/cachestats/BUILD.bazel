@@ -1,0 +1,86 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cachestats",
+    srcs = [
+        "cachestats.go",
+        "cachestats_unsupported.go",
+    ],
+    importpath = "github.com/rclone/rclone/cmd/cachestats",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//backend/cache",
+            "//cmd",
+            "//fs",
+            "@com_github_spf13_cobra//:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

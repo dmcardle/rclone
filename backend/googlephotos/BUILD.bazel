@@ -1,0 +1,54 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "googlephotos",
+    srcs = [
+        "albums.go",
+        "googlephotos.go",
+        "pattern.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/googlephotos",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/googlephotos/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/dirtree",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/log",
+        "//lib/batcher",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/rest",
+        "@org_golang_x_oauth2//:go_default_library",
+        "@org_golang_x_oauth2//google:go_default_library",
+    ],
+)
+
+go_test(
+    name = "googlephotos_test",
+    srcs = [
+        "albums_test.go",
+        "googlephotos_test.go",
+        "pattern_test.go",
+    ],
+    embed = [":googlephotos"],
+    deps = [
+        "//backend/googlephotos/api",
+        "//backend/local",
+        "//fs",
+        "//fs/dirtree",
+        "//fs/hash",
+        "//fstest",
+        "//fstest/mockobject",
+        "//lib/random",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

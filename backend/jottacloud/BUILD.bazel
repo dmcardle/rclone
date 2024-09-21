@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "jottacloud",
+    srcs = ["jottacloud.go"],
+    importpath = "github.com/rclone/rclone/backend/jottacloud",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/jottacloud/api",
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/walk",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/rest",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "jottacloud_test",
+    srcs = [
+        "jottacloud_internal_test.go",
+        "jottacloud_test.go",
+    ],
+    embed = [":jottacloud"],
+    deps = [
+        "//fs",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

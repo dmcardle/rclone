@@ -1,0 +1,56 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "s3",
+    srcs = [
+        "backend.go",
+        "ioutils.go",
+        "list.go",
+        "logger.go",
+        "pager.go",
+        "s3.go",
+        "server.go",
+        "utils.go",
+    ],
+    embedsrcs = ["serve_s3.md"],
+    importpath = "github.com/rclone/rclone/cmd/serve/s3",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/serve/proxy",
+        "//cmd/serve/proxy/proxyflags",
+        "//fs",
+        "//fs/config/flags",
+        "//fs/hash",
+        "//lib/http",
+        "//vfs",
+        "//vfs/vfscommon",
+        "//vfs/vfsflags",
+        "@com_github_go_chi_chi_v5//:go_default_library",
+        "@com_github_ncw_swift_v2//:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "s3_test",
+    srcs = ["s3_test.go"],
+    data = glob(["testdata/**"]),
+    embed = [":s3"],
+    deps = [
+        "//backend/local",
+        "//cmd/serve/proxy/proxyflags",
+        "//cmd/serve/servetest",
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/hash",
+        "//fs/object",
+        "//fstest",
+        "//lib/http",
+        "//lib/random",
+        "@com_github_minio_minio_go_v7//:go_default_library",
+        "@com_github_minio_minio_go_v7//pkg/credentials:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

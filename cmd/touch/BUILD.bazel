@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "touch",
+    srcs = ["touch.go"],
+    importpath = "github.com/rclone/rclone/cmd/touch",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "//fs/config/flags",
+        "//fs/fspath",
+        "//fs/object",
+        "//fs/operations",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "touch_test",
+    srcs = ["touch_test.go"],
+    embed = [":touch"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fstest",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

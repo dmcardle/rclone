@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "testy",
+    srcs = ["testy.go"],
+    importpath = "github.com/rclone/rclone/fstest/testy",
+    visibility = ["//visibility:public"],
+)

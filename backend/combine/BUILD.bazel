@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "combine",
+    srcs = ["combine.go"],
+    importpath = "github.com/rclone/rclone/backend/combine",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/hash",
+        "//fs/operations",
+        "//fs/walk",
+        "@org_golang_x_sync//errgroup:go_default_library",
+    ],
+)
+
+go_test(
+    name = "combine_test",
+    srcs = [
+        "combine_internal_test.go",
+        "combine_test.go",
+    ],
+    embed = [":combine"],
+    deps = [
+        "//backend/local",
+        "//backend/memory",
+        "//fstest",
+        "//fstest/fstests",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

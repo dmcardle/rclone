@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "putio",
+    srcs = [
+        "error.go",
+        "fs.go",
+        "object.go",
+        "putio.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/putio",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_putdotio_go_putio_putio//:go_default_library",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "putio_test",
+    srcs = ["putio_test.go"],
+    embed = [":putio"],
+    deps = ["//fstest/fstests"],
+)

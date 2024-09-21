@@ -1,0 +1,49 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "rcserver",
+    srcs = [
+        "metrics.go",
+        "rcserver.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/rc/rcserver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/cache",
+        "//fs/config",
+        "//fs/fshttp",
+        "//fs/list",
+        "//fs/rc",
+        "//fs/rc/jobs",
+        "//fs/rc/webgui",
+        "//lib/http",
+        "//lib/http/serve",
+        "//lib/random",
+        "@com_github_go_chi_chi_v5//middleware:go_default_library",
+        "@com_github_prometheus_client_golang//prometheus:go_default_library",
+        "@com_github_prometheus_client_golang//prometheus/promhttp:go_default_library",
+        "@com_github_skratchdot_open_golang//open:go_default_library",
+    ],
+)
+
+go_test(
+    name = "rcserver_test",
+    srcs = [
+        "metrics_test.go",
+        "rcserver_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":rcserver"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fs/accounting",
+        "//fs/config/configfile",
+        "//fs/rc",
+        "@com_github_go_chi_chi_v5//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

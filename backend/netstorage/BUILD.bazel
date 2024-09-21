@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "netstorage",
+    srcs = ["netstorage.go"],
+    importpath = "github.com/rclone/rclone/backend/netstorage",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/walk",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "netstorage_test",
+    srcs = ["netstorage_test.go"],
+    deps = [
+        ":netstorage",
+        "//fstest/fstests",
+    ],
+)

@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "vfsflags",
+    srcs = ["vfsflags.go"],
+    importpath = "github.com/rclone/rclone/vfs/vfsflags",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs/config/flags",
+        "//vfs/vfscommon",
+        "@com_github_spf13_pflag//:go_default_library",
+    ],
+)

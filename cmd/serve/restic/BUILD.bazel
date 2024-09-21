@@ -1,0 +1,50 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "restic",
+    srcs = [
+        "cache.go",
+        "restic.go",
+        "stdio_conn.go",
+    ],
+    importpath = "github.com/rclone/rclone/cmd/serve/restic",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "//fs/accounting",
+        "//fs/config/flags",
+        "//fs/operations",
+        "//fs/walk",
+        "//lib/http",
+        "//lib/http/serve",
+        "//lib/systemd",
+        "//lib/terminal",
+        "@com_github_go_chi_chi_v5//:go_default_library",
+        "@com_github_go_chi_chi_v5//middleware:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+        "@org_golang_x_net//http2:go_default_library",
+    ],
+)
+
+go_test(
+    name = "restic_test",
+    srcs = [
+        "cache_test.go",
+        "restic_appendonly_test.go",
+        "restic_privaterepos_test.go",
+        "restic_test.go",
+        "restic_utils_test.go",
+    ],
+    embed = [":restic"],
+    deps = [
+        "//backend/all",
+        "//cmd",
+        "//fs",
+        "//fs/config/configfile",
+        "//fstest",
+        "//fstest/mockobject",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

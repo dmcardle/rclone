@@ -1,0 +1,55 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "crypt",
+    srcs = [
+        "cipher.go",
+        "crypt.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/crypt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/crypt/pkcs7",
+        "//fs",
+        "//fs/accounting",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fspath",
+        "//fs/hash",
+        "//lib/readers",
+        "//lib/version",
+        "@com_github_max_sum_base32768//:go_default_library",
+        "@com_github_rfjakob_eme//:go_default_library",
+        "@org_golang_x_crypto//nacl/secretbox:go_default_library",
+        "@org_golang_x_crypto//scrypt:go_default_library",
+    ],
+)
+
+go_test(
+    name = "crypt_test",
+    srcs = [
+        "cipher_test.go",
+        "crypt_internal_test.go",
+        "crypt_test.go",
+    ],
+    embed = [":crypt"],
+    deps = [
+        "//backend/crypt/pkcs7",
+        "//backend/drive",
+        "//backend/local",
+        "//backend/swift",
+        "//fs",
+        "//fs/config/obscure",
+        "//fs/hash",
+        "//fs/object",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/random",
+        "//lib/readers",
+        "@com_github_max_sum_base32768//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

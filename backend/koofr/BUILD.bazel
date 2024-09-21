@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "koofr",
+    srcs = ["koofr.go"],
+    importpath = "github.com/rclone/rclone/backend/koofr",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/encoder",
+        "@com_github_koofr_go_httpclient//:go_default_library",
+        "@com_github_koofr_go_koofrclient//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "koofr_test",
+    srcs = ["koofr_test.go"],
+    deps = ["//fstest/fstests"],
+)

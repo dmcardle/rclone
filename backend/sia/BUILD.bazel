@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "sia",
+    srcs = ["sia.go"],
+    importpath = "github.com/rclone/rclone/backend/sia",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/sia/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "sia_test",
+    srcs = ["sia_test.go"],
+    deps = [
+        ":sia",
+        "//fstest/fstests",
+    ],
+)

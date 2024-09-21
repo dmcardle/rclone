@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "http",
+    srcs = ["http.go"],
+    importpath = "github.com/rclone/rclone/backend/http",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/rest",
+        "@org_golang_x_net//html:go_default_library",
+    ],
+)
+
+go_test(
+    name = "http_test",
+    srcs = ["http_internal_test.go"],
+    embed = [":http"],
+    deps = [
+        "//fs",
+        "//fs/config/configfile",
+        "//fs/config/configmap",
+        "//fstest",
+        "//lib/rest",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

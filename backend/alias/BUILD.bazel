@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "alias",
+    srcs = ["alias.go"],
+    importpath = "github.com/rclone/rclone/backend/alias",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fspath",
+    ],
+)
+
+go_test(
+    name = "alias_test",
+    srcs = ["alias_internal_test.go"],
+    embed = [":alias"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configfile",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

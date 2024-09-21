@@ -1,0 +1,75 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "logger",
+    srcs = ["logger.go"],
+    importpath = "github.com/rclone/rclone/fs/logger",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/all",
+        "//cmd",
+        "//cmd/all",
+        "//lib/plugin",
+    ],
+)
+
+go_test(
+    name = "logger_test",
+    srcs = ["logger_test.go"],
+    data = glob(["testdata/**"]),
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            ":logger",
+            "@com_github_rogpeppe_go_internal//testscript:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

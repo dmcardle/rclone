@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "cmdtest",
+    srcs = ["cmdtest.go"],
+    importpath = "github.com/rclone/rclone/cmdtest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/all",
+        "//cmd",
+        "//cmd/all",
+        "//lib/plugin",
+    ],
+)
+
+go_test(
+    name = "cmdtest_test",
+    srcs = [
+        "cmdtest_test.go",
+        "environment_test.go",
+    ],
+    embed = [":cmdtest"],
+    deps = [
+        "//fs",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,50 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "vfscache",
+    srcs = [
+        "cache.go",
+        "item.go",
+    ],
+    importpath = "github.com/rclone/rclone/vfs/vfscache",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//fs/operations",
+        "//fs/rc",
+        "//lib/diskusage",
+        "//lib/encoder",
+        "//lib/file",
+        "//lib/ranges",
+        "//lib/systemd",
+        "//vfs/vfscache/downloaders",
+        "//vfs/vfscache/writeback",
+        "//vfs/vfscommon",
+    ],
+)
+
+go_test(
+    name = "vfscache_test",
+    srcs = [
+        "cache_test.go",
+        "item_test.go",
+    ],
+    embed = [":vfscache"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fs/config",
+        "//fstest",
+        "//lib/diskusage",
+        "//lib/random",
+        "//lib/readers",
+        "//vfs/vfscache/writeback",
+        "//vfs/vfscommon",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

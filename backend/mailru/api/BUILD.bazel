@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "api",
+    srcs = [
+        "bin.go",
+        "helpers.go",
+        "m1.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/mailru/api",
+    visibility = ["//visibility:public"],
+    deps = ["//lib/readers"],
+)

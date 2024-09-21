@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "quatrix",
+    srcs = [
+        "quatrix.go",
+        "upload_memory.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/quatrix",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/quatrix/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/multipart",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "quatrix_test",
+    srcs = ["quatrix_test.go"],
+    deps = [
+        ":quatrix",
+        "//fstest/fstests",
+    ],
+)

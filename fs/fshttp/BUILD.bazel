@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "fshttp",
+    srcs = [
+        "dialer.go",
+        "http.go",
+        "prometheus.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/fshttp",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//lib/structs",
+        "@com_github_prometheus_client_golang//prometheus:go_default_library",
+        "@org_golang_x_net//ipv4:go_default_library",
+        "@org_golang_x_net//ipv6:go_default_library",
+        "@org_golang_x_net//publicsuffix:go_default_library",
+    ],
+)
+
+go_test(
+    name = "fshttp_test",
+    srcs = ["http_test.go"],
+    embed = [":fshttp"],
+    deps = [
+        "//fs",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

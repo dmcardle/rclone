@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "env",
+    srcs = ["env.go"],
+    importpath = "github.com/rclone/rclone/lib/env",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_mitchellh_go_homedir//:go_default_library"],
+)
+
+go_test(
+    name = "env_test",
+    srcs = ["env_test.go"],
+    embed = [":env"],
+    deps = [
+        "@com_github_mitchellh_go_homedir//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

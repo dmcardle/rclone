@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "api",
+    srcs = ["types.go"],
+    importpath = "github.com/rclone/rclone/backend/jottacloud/api",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "api_test",
+    srcs = ["types_test.go"],
+    embed = [":api"],
+)

@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "ulozto",
+    srcs = ["ulozto.go"],
+    importpath = "github.com/rclone/rclone/backend/ulozto",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/ulozto/api",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "ulozto_test",
+    srcs = ["ulozto_test.go"],
+    embed = [":ulozto"],
+    deps = [
+        "//backend/ulozto/api",
+        "//fs",
+        "//fs/hash",
+        "//fs/operations",
+        "//fstest",
+        "//fstest/fstests",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

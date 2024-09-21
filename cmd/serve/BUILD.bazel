@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "serve",
+    srcs = ["serve.go"],
+    importpath = "github.com/rclone/rclone/cmd/serve",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/serve/dlna",
+        "//cmd/serve/docker",
+        "//cmd/serve/ftp",
+        "//cmd/serve/http",
+        "//cmd/serve/nfs",
+        "//cmd/serve/restic",
+        "//cmd/serve/s3",
+        "//cmd/serve/sftp",
+        "//cmd/serve/webdav",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)

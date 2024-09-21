@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "tree",
+    srcs = ["tree.go"],
+    importpath = "github.com/rclone/rclone/cmd/tree",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "//fs/config/flags",
+        "//fs/dirtree",
+        "//fs/log",
+        "//fs/walk",
+        "//lib/encoder",
+        "//lib/terminal",
+        "@com_github_a8m_tree//:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "tree_test",
+    srcs = ["tree_test.go"],
+    embed = [":tree"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fstest",
+        "@com_github_a8m_tree//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

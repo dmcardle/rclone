@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "gendocs",
+    srcs = ["gendocs.go"],
+    importpath = "github.com/rclone/rclone/cmd/gendocs",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//fs",
+        "//fs/config/flags",
+        "//lib/file",
+        "@com_github_spf13_cobra//:go_default_library",
+        "@com_github_spf13_cobra//doc:go_default_library",
+    ],
+)

@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "gomobile",
+    srcs = ["gomobile.go"],
+    importpath = "github.com/rclone/rclone/librclone/gomobile",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/all",
+        "//lib/plugin",
+        "//librclone/librclone",
+        "@org_golang_x_mobile//event/key:go_default_library",
+    ],
+)

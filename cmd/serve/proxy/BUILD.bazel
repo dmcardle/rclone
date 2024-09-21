@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "proxy",
+    srcs = ["proxy.go"],
+    importpath = "github.com/rclone/rclone/cmd/serve/proxy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/obscure",
+        "//lib/cache",
+        "//vfs",
+        "//vfs/vfscommon",
+    ],
+)
+
+go_test(
+    name = "proxy_test",
+    srcs = ["proxy_test.go"],
+    embed = [":proxy"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/config/obscure",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+        "@org_golang_x_crypto//ssh:go_default_library",
+    ],
+)

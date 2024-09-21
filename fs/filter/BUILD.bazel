@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "filter",
+    srcs = [
+        "filter.go",
+        "glob.go",
+        "rules.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/filter",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "@org_golang_x_sync//errgroup:go_default_library",
+    ],
+)
+
+go_test(
+    name = "filter_test",
+    srcs = [
+        "filter_test.go",
+        "glob_test.go",
+    ],
+    embed = [":filter"],
+    deps = [
+        "//fs",
+        "//fstest/mockobject",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

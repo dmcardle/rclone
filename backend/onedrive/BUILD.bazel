@@ -1,0 +1,58 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "onedrive",
+    srcs = [
+        "metadata.go",
+        "onedrive.go",
+    ],
+    embedsrcs = ["metadata.md"],
+    importpath = "github.com/rclone/rclone/backend/onedrive",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/onedrive/api",
+        "//backend/onedrive/quickxorhash",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//fs/log",
+        "//fs/operations",
+        "//fs/walk",
+        "//lib/atexit",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/errcount",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/readers",
+        "//lib/rest",
+        "@org_golang_x_exp//slices:go_default_library",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "onedrive_test",
+    srcs = [
+        "onedrive_internal_test.go",
+        "onedrive_test.go",
+    ],
+    embed = [":onedrive"],
+    deps = [
+        "//backend/local",
+        "//backend/onedrive/api",
+        "//fs",
+        "//fs/operations",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/random",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+        "@org_golang_x_exp//slices:go_default_library",
+    ],
+)

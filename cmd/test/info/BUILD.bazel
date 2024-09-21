@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "info",
+    srcs = [
+        "base32768.go",
+        "info.go",
+    ],
+    importpath = "github.com/rclone/rclone/cmd/test/info",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/test",
+        "//cmd/test/info/internal",
+        "//fs",
+        "//fs/config/flags",
+        "//fs/fspath",
+        "//fs/hash",
+        "//fs/object",
+        "//fs/operations",
+        "//fs/sync",
+        "//lib/random",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)

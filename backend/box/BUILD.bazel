@@ -1,0 +1,43 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "box",
+    srcs = [
+        "box.go",
+        "upload.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/box",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/box/api",
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/atexit",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/env",
+        "//lib/jwtutil",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/rest",
+        "@com_github_golang_jwt_jwt_v4//:go_default_library",
+        "@com_github_youmark_pkcs8//:go_default_library",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "box_test",
+    srcs = ["box_test.go"],
+    deps = [
+        ":box",
+        "//fstest/fstests",
+    ],
+)

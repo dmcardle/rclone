@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "hasher",
+    srcs = [
+        "commands.go",
+        "hasher.go",
+        "kv.go",
+        "object.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/hasher",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/cache",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fspath",
+        "//fs/hash",
+        "//fs/operations",
+        "//lib/kv",
+    ],
+)
+
+go_test(
+    name = "hasher_test",
+    srcs = [
+        "hasher_internal_test.go",
+        "hasher_test.go",
+    ],
+    embed = [":hasher"],
+    deps = [
+        "//backend/all",
+        "//fs",
+        "//fs/config/obscure",
+        "//fs/operations",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/kv",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

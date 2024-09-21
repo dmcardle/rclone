@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "fichier",
+    srcs = [
+        "api.go",
+        "fichier.go",
+        "object.go",
+        "structs.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/fichier",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/dircache",
+        "//lib/encoder",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "fichier_test",
+    srcs = ["fichier_test.go"],
+    embed = [":fichier"],
+    deps = ["//fstest/fstests"],
+)

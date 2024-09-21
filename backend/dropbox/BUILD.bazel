@@ -1,0 +1,48 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "dropbox",
+    srcs = [
+        "batcher.go",
+        "dropbox.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/dropbox",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/dropbox/dbhash",
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/hash",
+        "//lib/batcher",
+        "//lib/encoder",
+        "//lib/oauthutil",
+        "//lib/pacer",
+        "//lib/readers",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/auth:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/common:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/files:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/sharing:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/team:go_default_library",
+        "@com_github_dropbox_dropbox_sdk_go_unofficial_v6//dropbox/users:go_default_library",
+        "@org_golang_x_oauth2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "dropbox_test",
+    srcs = [
+        "dropbox_internal_test.go",
+        "dropbox_test.go",
+    ],
+    embed = [":dropbox"],
+    deps = [
+        "//fs",
+        "//fstest/fstests",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

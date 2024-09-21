@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "writeback",
+    srcs = ["writeback.go"],
+    importpath = "github.com/rclone/rclone/vfs/vfscache/writeback",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//vfs/vfscommon",
+    ],
+)
+
+go_test(
+    name = "writeback_test",
+    srcs = ["writeback_test.go"],
+    embed = [":writeback"],
+    deps = [
+        "//fs",
+        "//vfs/vfscommon",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

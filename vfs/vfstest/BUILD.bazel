@@ -1,0 +1,53 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "vfstest",
+    srcs = [
+        "dir.go",
+        "edge_cases.go",
+        "file.go",
+        "fs.go",
+        "os.go",
+        "read.go",
+        "read_non_unix.go",
+        "read_unix.go",
+        "submount.go",
+        "vfs.go",
+        "write.go",
+        "write_other.go",
+        "write_unix.go",
+        "write_windows.go",
+    ],
+    importpath = "github.com/rclone/rclone/vfs/vfstest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/all",
+        "//cmd/mountlib",
+        "//fs",
+        "//fs/cache",
+        "//fs/walk",
+        "//fstest",
+        "//lib/file",
+        "//vfs",
+        "//vfs/vfscommon",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "@org_golang_x_sys//unix:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

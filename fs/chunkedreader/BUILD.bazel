@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "chunkedreader",
+    srcs = [
+        "chunkedreader.go",
+        "parallel.go",
+        "sequential.go",
+    ],
+    importpath = "github.com/rclone/rclone/fs/chunkedreader",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/hash",
+        "//fs/log",
+        "//fs/operations",
+        "//lib/multipart",
+        "//lib/pool",
+    ],
+)
+
+go_test(
+    name = "chunkedreader_test",
+    srcs = [
+        "chunkedreader_test.go",
+        "parallel_test.go",
+        "sequential_test.go",
+    ],
+    embed = [":chunkedreader"],
+    deps = [
+        "//backend/local",
+        "//fstest",
+        "//fstest/mockobject",
+        "//lib/multipart",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

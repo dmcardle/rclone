@@ -1,0 +1,34 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+# gazelle:prefix github.com/rclone/rclone
+gazelle(name = "gazelle")
+
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
+
+go_library(
+    name = "rclone_lib",
+    srcs = ["rclone.go"],
+    importpath = "github.com/rclone/rclone",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//backend/all",
+        "//cmd",
+        "//cmd/all",
+        "//lib/plugin",
+    ],
+)
+
+go_binary(
+    name = "rclone",
+    embed = [":rclone_lib"],
+    visibility = ["//visibility:public"],
+)

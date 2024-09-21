@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "http",
+    srcs = ["http.go"],
+    importpath = "github.com/rclone/rclone/cmd/serve/http",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/serve/proxy",
+        "//cmd/serve/proxy/proxyflags",
+        "//fs",
+        "//fs/accounting",
+        "//lib/http",
+        "//lib/http/serve",
+        "//lib/systemd",
+        "//vfs",
+        "//vfs/vfscommon",
+        "//vfs/vfsflags",
+        "@com_github_go_chi_chi_v5//middleware:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "http_test",
+    srcs = ["http_test.go"],
+    data = glob(["testdata/**"]),
+    embed = [":http"],
+    deps = [
+        "//backend/local",
+        "//cmd/serve/proxy/proxyflags",
+        "//fs",
+        "//fs/filter",
+        "//lib/http",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,45 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "union",
+    srcs = [
+        "entry.go",
+        "errors.go",
+        "union.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/union",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//backend/union/common",
+        "//backend/union/policy",
+        "//backend/union/upstream",
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/hash",
+        "//fs/operations",
+        "//fs/walk",
+    ],
+)
+
+go_test(
+    name = "union_test",
+    srcs = [
+        "errors_test.go",
+        "union_internal_test.go",
+        "union_test.go",
+    ],
+    embed = [":union"],
+    deps = [
+        "//backend/local",
+        "//backend/memory",
+        "//fs",
+        "//fs/object",
+        "//fs/operations",
+        "//fstest",
+        "//fstest/fstests",
+        "//lib/random",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

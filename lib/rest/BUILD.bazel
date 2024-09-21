@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "rest",
+    srcs = [
+        "headers.go",
+        "rest.go",
+        "url.go",
+    ],
+    importpath = "github.com/rclone/rclone/lib/rest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//lib/readers",
+    ],
+)
+
+go_test(
+    name = "rest_test",
+    srcs = [
+        "headers_test.go",
+        "url_test.go",
+    ],
+    embed = [":rest"],
+    deps = [
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

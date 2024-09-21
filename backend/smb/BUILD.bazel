@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "smb",
+    srcs = [
+        "connpool.go",
+        "smb.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/smb",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/accounting",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/bucket",
+        "//lib/encoder",
+        "//lib/env",
+        "//lib/pacer",
+        "//lib/readers",
+        "@com_github_cloudsoda_go_smb2//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "smb_test",
+    srcs = ["smb_test.go"],
+    deps = [
+        ":smb",
+        "//fstest/fstests",
+    ],
+)

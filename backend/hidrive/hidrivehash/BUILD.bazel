@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "hidrivehash",
+    srcs = ["hidrivehash.go"],
+    importpath = "github.com/rclone/rclone/backend/hidrive/hidrivehash",
+    visibility = ["//visibility:public"],
+    deps = ["//backend/hidrive/hidrivehash/internal"],
+)
+
+go_test(
+    name = "hidrivehash_test",
+    srcs = ["hidrivehash_test.go"],
+    deps = [
+        ":hidrivehash",
+        "//backend/hidrive/hidrivehash/internal",
+        "@com_github_stretchr_testify//assert:go_default_library",
+    ],
+)

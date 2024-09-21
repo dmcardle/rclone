@@ -1,0 +1,52 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "dlna",
+    srcs = [
+        "cds.go",
+        "cms.go",
+        "dlna.go",
+        "dlna_util.go",
+        "mrrs.go",
+    ],
+    importpath = "github.com/rclone/rclone/cmd/serve/dlna",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/serve/dlna/data",
+        "//cmd/serve/dlna/dlnaflags",
+        "//cmd/serve/dlna/upnpav",
+        "//fs",
+        "//lib/systemd",
+        "//vfs",
+        "//vfs/vfscommon",
+        "//vfs/vfsflags",
+        "@com_github_anacrolix_dms//dlna:go_default_library",
+        "@com_github_anacrolix_dms//soap:go_default_library",
+        "@com_github_anacrolix_dms//ssdp:go_default_library",
+        "@com_github_anacrolix_dms//upnp:go_default_library",
+        "@com_github_anacrolix_log//:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "dlna_test",
+    srcs = [
+        "cds_test.go",
+        "dlna_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":dlna"],
+    deps = [
+        "//backend/local",
+        "//cmd/serve/dlna/dlnaflags",
+        "//fs",
+        "//fs/config/configfile",
+        "//fs/config/configmap",
+        "//vfs",
+        "@com_github_anacrolix_dms//soap:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

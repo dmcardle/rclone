@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "build_csv_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/rclone/rclone/cmd/test/info/internal/build_csv",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//cmd/test/info/internal",
+        "//fs",
+    ],
+)
+
+go_binary(
+    name = "build_csv",
+    embed = [":build_csv_lib"],
+    visibility = ["//cmd/test/info:__subpackages__"],
+)

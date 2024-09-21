@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "errcount",
+    srcs = ["errcount.go"],
+    importpath = "github.com/rclone/rclone/lib/errcount",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "errcount_test",
+    srcs = ["errcount_test.go"],
+    embed = [":errcount"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)

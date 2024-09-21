@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pixeldrain",
+    srcs = [
+        "api_client.go",
+        "pixeldrain.go",
+    ],
+    importpath = "github.com/rclone/rclone/backend/pixeldrain",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/pacer",
+        "//lib/rest",
+    ],
+)
+
+go_test(
+    name = "pixeldrain_test",
+    srcs = ["pixeldrain_test.go"],
+    deps = [
+        ":pixeldrain",
+        "//fstest/fstests",
+    ],
+)

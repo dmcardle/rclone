@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "dlnaflags",
+    srcs = ["dlnaflags.go"],
+    importpath = "github.com/rclone/rclone/cmd/serve/dlna/dlnaflags",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config/flags",
+        "@com_github_spf13_pflag//:go_default_library",
+    ],
+)

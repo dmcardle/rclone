@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "lsf",
+    srcs = ["lsf.go"],
+    importpath = "github.com/rclone/rclone/cmd/lsf",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd",
+        "//cmd/ls/lshelp",
+        "//fs",
+        "//fs/config/flags",
+        "//fs/hash",
+        "//fs/operations",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "lsf_test",
+    srcs = ["lsf_test.go"],
+    embed = [":lsf"],
+    deps = [
+        "//backend/local",
+        "//fs",
+        "//fs/list",
+        "//fs/operations",
+        "//fstest",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

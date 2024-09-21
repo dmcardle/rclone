@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "filescom",
+    srcs = ["filescom.go"],
+    importpath = "github.com/rclone/rclone/backend/filescom",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fs",
+        "//fs/config",
+        "//fs/config/configmap",
+        "//fs/config/configstruct",
+        "//fs/config/obscure",
+        "//fs/fserrors",
+        "//fs/fshttp",
+        "//fs/hash",
+        "//lib/encoder",
+        "//lib/pacer",
+        "@com_github_files_com_files_sdk_go_v3//:go_default_library",
+        "@com_github_files_com_files_sdk_go_v3//bundle:go_default_library",
+        "@com_github_files_com_files_sdk_go_v3//file:go_default_library",
+        "@com_github_files_com_files_sdk_go_v3//filemigration:go_default_library",
+        "@com_github_files_com_files_sdk_go_v3//folder:go_default_library",
+        "@com_github_files_com_files_sdk_go_v3//session:go_default_library",
+    ],
+)
+
+go_test(
+    name = "filescom_test",
+    srcs = ["filescom_test.go"],
+    deps = [
+        ":filescom",
+        "//fstest/fstests",
+    ],
+)

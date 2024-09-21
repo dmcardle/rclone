@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "obscure",
+    srcs = ["obscure.go"],
+    importpath = "github.com/rclone/rclone/fs/config/obscure",
+    visibility = ["//visibility:public"],
+    deps = ["//fs"],
+)
+
+go_test(
+    name = "obscure_test",
+    srcs = ["obscure_test.go"],
+    embed = [":obscure"],
+    deps = ["@com_github_stretchr_testify//assert:go_default_library"],
+)
