@@ -24,6 +24,10 @@ go_test(
         "e2e_test.go",
         "gitannex_test.go",
     ],
+    data = [ "//:rclone" ],
+    env = {
+        "RCLONE_ROOTPATH": "$(rootpath //:rclone)"
+    },
     embed = [":gitannex"],
     deps = [
         "//backend/local",

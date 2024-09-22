@@ -18,6 +18,32 @@ import (
 	"github.com/rclone/rclone/lib/buildinfo"
 )
 
+// init detects whether Bazel is running these tests and, if so, updates the
+// PATH to point to the rclone binary built by Bazel.
+func init() {
+	bazelRunfilesDir := os.Getenv("RUNFILES_DIR")
+	if bazelRunfilesDir == "" {
+		return
+	}
+	rcloneRootpath := os.Getenv("RCLONE_ROOTPATH")
+	if rcloneRootpath == "" {
+		panic("Detected Bazel environment without RCLONE_ROOTPATH")
+	}
+	rcloneDir := filepath.Dir(rcloneRootpath)
+	rcloneDir, err := filepath.Abs(rcloneDir)
+	if err != nil {
+		panic("Failed to make directory absolute: " + rcloneDir)
+	}
+
+	envPath := os.Getenv("PATH")
+	envPath = fmt.Sprintf("%s/_main/%s:%s", bazelRunfilesDir, rcloneDir, envPath)
+	fmt.Printf("!!!! constructed new PATH = %q\n", envPath)
+	err := os.Setenv("PATH", envPath)
+	if err != nil {
+		panic("Failed to set new PATH")
+	}
+}
+
 // checkRcloneBinaryVersion runs whichever rclone is on the PATH and checks
 // whether it reports a version that matches the test's expectations. Returns
 // nil when the version is the expected version, otherwise returns an error.
