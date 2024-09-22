@@ -25,21 +25,22 @@ func init() {
 	if bazelRunfilesDir == "" {
 		return
 	}
-	rcloneRootpath := os.Getenv("RCLONE_ROOTPATH")
-	if rcloneRootpath == "" {
+	bazelRcloneRootpath := os.Getenv("RCLONE_ROOTPATH")
+	if bazelRcloneRootpath == "" {
 		panic("Detected Bazel environment without RCLONE_ROOTPATH")
 	}
-	rcloneDir := filepath.Dir(rcloneRootpath)
-	rcloneDir, err := filepath.Abs(rcloneDir)
+	// Fix up the root path because it's not actually relative to the cwd yet.
+	bazelRcloneRootpath = filepath.Join(bazelRunfilesDir, "_main", bazelRcloneRootpath)
+
+	bazelRcloneRootpathAbs, err :=  filepath.Abs(bazelRcloneRootpath)
 	if err != nil {
-		panic("Failed to make directory absolute: " + rcloneDir)
+		panic("Failed to make absolute path: " + bazelRcloneRootpath)
 	}
 
 	envPath := os.Getenv("PATH")
-	envPath = fmt.Sprintf("%s/_main/%s:%s", bazelRunfilesDir, rcloneDir, envPath)
+	envPath = fmt.Sprintf("%s:%s", filepath.Dir(bazelRcloneRootpathAbs), envPath)
 	fmt.Printf("!!!! constructed new PATH = %q\n", envPath)
-	err := os.Setenv("PATH", envPath)
-	if err != nil {
+	if err := os.Setenv("PATH", envPath); err != nil {
 		panic("Failed to set new PATH")
 	}
 }
