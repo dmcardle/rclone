@@ -1,1 +1,3 @@
+# Run Go tests verbosely by default. This way, `bazel test
+# --test_output=streamed` will actually show which tests ran.
 test --test_arg=-test.v
