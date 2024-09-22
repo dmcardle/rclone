@@ -12,6 +12,10 @@ module(
 bazel_dep(name = "rules_go", version = "0.50.1", repo_name = "io_bazel_rules_go")
 bazel_dep(name = "gazelle", version = "0.38.0", repo_name = "bazel_gazelle")
 
+# Workaround
+# https://github.com/bazelbuild/rules_go/issues/3799#issuecomment-1880035642
+bazel_dep(name = "circl", version = "1.3.7")
+
 go_sdk = use_extension("@io_bazel_rules_go//go:extensions.bzl", "go_sdk")
 go_sdk.download(version = "1.21.0")
 # Alternatively, use the host system's Go SDK.
@@ -131,18 +135,15 @@ go_deps.gazelle_override(
     build_file_generation = "on",
     path = "github.com/cronokirby/saferith",
     build_extra_args = [
-        # The sources we want declare themselves to be part of the `saferith`
-        # package.  For whatever reason, this test file declares itself part of
-        # the `big` package. Ignore the offending file so Gazelle can generate a
-        # BUILD file for us.
+        # This test file declares `package big` rather than `package saferith`.
         "-exclude=arith_s390x_test.go",
     ],
 )
-# go_deps.gazelle_override(
-#     directives = ["gazelle:proto legacy"],
-#     path = "github.com/ProtonMail/go-srp",
-# )
-
-go_deps.config(
-    debug_mode = True,
+go_deps.gazelle_override(
+    path = "storj.io/picobuf",
+    directives = ["gazelle:proto legacy"],
+)
+go_deps.gazelle_override(
+    path = "storj.io/eventkit",
+    directives = ["gazelle:proto legacy"],
 )
