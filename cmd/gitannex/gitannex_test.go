@@ -72,7 +72,6 @@ var messageParserTestCases = []messageParserTestCase{
 			param, err = m.nextSpaceDelimitedParameter()
 			assert.Error(t, err)
 			assert.Equal(t, param, "")
-
 		},
 	},
 	{
@@ -98,7 +97,6 @@ var messageParserTestCases = []messageParserTestCase{
 	},
 	{
 		"TwoParamsNoTrailingNewline",
-
 		func(t *testing.T) {
 			m := messageParser{"foo bar"}
 
@@ -150,7 +148,6 @@ var messageParserTestCases = []messageParserTestCase{
 					param = m.finalParameter()
 					assert.Equal(t, param, "")
 				})
-
 			}
 		},
 	},
@@ -444,8 +441,6 @@ var fstestTestCases = []testCase{
 			h.requireReadLineExact("VERSION 1")
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -472,8 +467,6 @@ var fstestTestCases = []testCase{
 				h.requireReadLine(),
 			)
 			h.requireReadLineExact("CONFIGEND")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -497,8 +490,6 @@ var fstestTestCases = []testCase{
 			require.Equal(t, h.server.configRcloneRemoteName, h.remoteName)
 			require.Equal(t, h.server.configPrefix, h.remotePrefix)
 			require.True(t, h.server.configsDone)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -525,8 +516,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-FAILURE unknown layout mode: nonexistentLayoutMode")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "unknown layout mode: nonexistentLayoutMode",
 	},
@@ -554,8 +543,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-FAILURE remote does not exist or incorrectly contains a path: thisRemoteDoesNotExist")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "remote does not exist or incorrectly contains a path: thisRemoteDoesNotExist",
 	},
@@ -587,8 +574,6 @@ var fstestTestCases = []testCase{
 				regexp.MustCompile("^INITREMOTE-FAILURE remote does not exist or incorrectly contains a path: "),
 				h.requireReadLine(),
 			)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "remote does not exist or incorrectly contains a path:",
 	},
@@ -611,8 +596,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-FAILURE backend does not exist: nonexistentBackend")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "backend does not exist:",
 	},
@@ -635,8 +618,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -658,8 +639,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-FAILURE remote could not be parsed: :local")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "remote could not be parsed:",
 	},
@@ -682,8 +661,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -705,8 +682,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-FAILURE remote does not exist or incorrectly contains a path: :local,description=banana:/bad/path")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "remote does not exist or incorrectly contains a path:",
 	},
@@ -733,8 +708,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -762,8 +735,6 @@ var fstestTestCases = []testCase{
 			require.Equal(t, h.server.configRcloneRemoteName, h.remoteName)
 			require.Equal(t, h.server.configPrefix, h.remotePrefix)
 			require.True(t, h.server.configsDone)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -796,8 +767,6 @@ var fstestTestCases = []testCase{
 			require.Equal(t, h.server.configRcloneRemoteName, remoteNameWithSpaces)
 			require.Equal(t, h.server.configPrefix, prefixWithWhitespace)
 			require.True(t, h.server.configsDone)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -807,8 +776,6 @@ var fstestTestCases = []testCase{
 
 			h.requireReadLineExact("VERSION 1")
 			h.requireWriteLine("ERROR foo")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "received error message from git-annex: foo",
 	},
@@ -826,8 +793,6 @@ var fstestTestCases = []testCase{
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("ERROR ineffable error")
 			h.requireReadLineExact("PREPARE-FAILURE Error getting configs")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "failed to parse config value: ERROR ineffable error",
 	},
@@ -843,8 +808,6 @@ var fstestTestCases = []testCase{
 			// Note the whitespace following the key.
 			h.requireWriteLine("TRANSFER STORE Key ")
 			h.requireReadLineExact("TRANSFER-FAILURE failed to parse file path")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 		expectedError: "failed to parse file",
 	},
@@ -894,8 +857,6 @@ var fstestTestCases = []testCase{
 			require.True(t, h.server.extensionAsync)
 			require.True(t, h.server.extensionGetGitRemoteName)
 			require.True(t, h.server.extensionUnavailableResponse)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -941,8 +902,6 @@ var fstestTestCases = []testCase{
 			require.True(t, h.server.extensionAsync)
 			require.False(t, h.server.extensionGetGitRemoteName)
 			require.False(t, h.server.extensionUnavailableResponse)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -967,8 +926,6 @@ var fstestTestCases = []testCase{
 			require.True(t, h.server.extensionAsync)
 			require.False(t, h.server.extensionGetGitRemoteName)
 			require.False(t, h.server.extensionUnavailableResponse)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1006,8 +963,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT KeyThatDoesNotExist")
 			h.requireReadLineExact("CHECKPRESENT-FAILURE KeyThatDoesNotExist")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	// Test that the TRANSFER command understands simple relative paths
@@ -1051,8 +1006,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT KeyThatDoesNotExist")
 			h.requireReadLineExact("CHECKPRESENT-FAILURE KeyThatDoesNotExist")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1093,8 +1046,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT KeyThatDoesNotExist")
 			h.requireReadLineExact("CHECKPRESENT-FAILURE KeyThatDoesNotExist")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1120,8 +1071,6 @@ var fstestTestCases = []testCase{
 
 			remoteItem := fstest.NewItem("KeyAbsolute", "HELLO", item.ModTime)
 			h.fstestRun.CheckRemoteItems(t, remoteItem)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	// Check whether a key is present, transfer a file with that key, then check
@@ -1160,8 +1109,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT foo")
 			h.requireReadLineExact("CHECKPRESENT-SUCCESS foo")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1189,8 +1136,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT " + realisticKey)
 			h.requireReadLineExact("CHECKPRESENT-SUCCESS " + realisticKey)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1204,8 +1149,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("TRANSFER RETRIEVE SomeKey path")
 			h.requireReadLineExact("TRANSFER-FAILURE RETRIEVE SomeKey not found")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1244,8 +1187,6 @@ var fstestTestCases = []testCase{
 				fstest.NewItem("file.txt", "HELLO", item.ModTime),
 				fstest.NewItem("file.txt.retrieved", "HELLO", item.ModTime),
 			)
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1279,8 +1220,6 @@ var fstestTestCases = []testCase{
 			h.requireReadLineExact("CHECKPRESENT-FAILURE SomeKey")
 
 			h.requireRemoteIsEmpty()
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1317,8 +1256,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT SomeKey")
 			h.requireReadLineExact("CHECKPRESENT-FAILURE SomeKey")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1342,8 +1279,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("CHECKPRESENT SomeKey")
 			h.requireReadLineExact("CHECKPRESENT-FAILURE SomeKey")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 	{
@@ -1357,8 +1292,6 @@ var fstestTestCases = []testCase{
 
 			h.requireWriteLine("EXPORTSUPPORTED")
 			h.requireReadLineExact("EXPORTSUPPORTED-FAILURE")
-
-			require.NoError(t, h.mockStdinW.Close())
 		},
 	},
 }
@@ -1444,6 +1377,9 @@ func TestGitAnnexFstestBackendCases(t *testing.T) {
 			}()
 
 			testCase.testProtocolFunc(t, &handle)
+			// Tell `handle.server` it's time to exit. This is also how
+			// git-annex tells special remotes it's done.
+			require.NoError(t, handle.mockStdinW.Close())
 
 			serverError, ok := <-serverErrorChan
 			require.True(t, ok, "Should receive one error/nil from server")
