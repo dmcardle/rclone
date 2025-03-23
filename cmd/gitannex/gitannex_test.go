@@ -95,9 +95,9 @@ type testState struct {
 	server           *server
 	mockStdinW       *io.PipeWriter
 	mockStdoutReader *bufio.Reader
-	// readLineTimeout is the maximum duration of time to wait for [server] to
+	// readWriteTimeout is the maximum duration of time to wait for [server] to
 	// write a line to be written to the mock stdout.
-	readLineTimeout time.Duration
+	readWriteTimeout time.Duration
 
 	fstestRun    *fstest.Run
 	remoteName   string
@@ -116,10 +116,10 @@ func makeTestState(t *testing.T) testState {
 		mockStdinW:       stdinW,
 		mockStdoutReader: bufio.NewReader(stdoutR),
 
-		// The default readLineTimeout must be large enough to accommodate slow
+		// The default readWriteTimeout must be large enough to accommodate slow
 		// operations on real remotes. Without a timeout, attempts to read a
 		// line that's never written would block indefinitely.
-		readLineTimeout: time.Second * 30,
+		readWriteTimeout: time.Second * 30,
 	}
 }
 
@@ -130,7 +130,7 @@ func (h *testState) requireRemoteIsEmpty() {
 // readLineWithTimeout attempts to read a line from the mock stdout. Returns an
 // error if the read operation times out or fails for any reason.
 func (h *testState) readLineWithTimeout() (string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), h.readLineTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), h.readWriteTimeout)
 	defer cancel()
 
 	lineChan := make(chan string)
@@ -155,6 +155,25 @@ func (h *testState) readLineWithTimeout() (string, error) {
 	}
 }
 
+func (h *testState) writeLineWithTimeout(line string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), h.readWriteTimeout)
+	defer cancel()
+
+	errChan := make(chan error)
+
+	go func() {
+		_, err := h.mockStdinW.Write([]byte(line + "\n"))
+		errChan <- err
+	}()
+
+	select {
+	case err := <-errChan:
+		return err
+	case <-ctx.Done():
+		return fmt.Errorf("attempt to write line timed out: %w", ctx.Err())
+	}
+}
+
 // requireReadLineExact requires that a line matching wantLine can be read from
 // the mock stdout.
 func (h *testState) requireReadLineExact(wantLine string) {
@@ -174,7 +193,7 @@ func (h *testState) requireReadLine() string {
 // requireWriteLine requires that the given line is successfully written to the
 // mock stdin.
 func (h *testState) requireWriteLine(line string) {
-	_, err := h.mockStdinW.Write([]byte(line + "\n"))
+	err := h.writeLineWithTimeout(line)
 	require.NoError(h.t, err)
 }
 
@@ -1154,44 +1173,84 @@ var fstestTestCases = []testCase{
 	},
 }
 
-// TestReadLineHasShortDeadline verifies that [testState.readLineWithTimeout]
-// does not block indefinitely when a line is never written.
-func TestReadLineHasShortDeadline(t *testing.T) {
-	const timeoutForRead = time.Millisecond * 50
-	const timeoutForTest = time.Millisecond * 100
-	const tickDuration = time.Millisecond * 10
+func TestReadWriteDeadlines(t *testing.T) {
+	// Verifies that [testState.readLineWithTimeout] does not block indefinitely
+	// when a line is never written.
+	t.Run("TestReadLine", func(t *testing.T) {
+		t.Parallel()
 
-	type readLineResult struct {
-		line string
-		err  error
-	}
+		const timeoutForRead = time.Millisecond * 50
+		const timeoutForTest = time.Millisecond * 100
+		const tickDuration = time.Millisecond * 10
 
-	resultChan := make(chan readLineResult)
+		type readLineResult struct {
+			line string
+			err  error
+		}
 
-	go func() {
-		defer close(resultChan)
+		resultChan := make(chan readLineResult)
 
-		h := makeTestState(t)
-		h.readLineTimeout = timeoutForRead
+		go func() {
+			defer close(resultChan)
 
-		line, err := h.readLineWithTimeout()
-		resultChan <- readLineResult{line, err}
-	}()
+			h := makeTestState(t)
+			h.readWriteTimeout = timeoutForRead
 
-	// This closure will be run periodically until time runs out or until all of
-	// its assertions pass.
-	idempotentConditionFunc := func(c *assert.CollectT) {
-		result, ok := <-resultChan
-		require.True(c, ok, "The goroutine should send a result")
+			line, err := h.readLineWithTimeout()
+			resultChan <- readLineResult{line, err}
+		}()
 
-		require.Empty(c, result.line, "No line should be read")
-		require.ErrorIs(c, result.err, context.DeadlineExceeded)
+		// This closure will be run periodically until time runs out or until all of
+		// its assertions pass.
+		idempotentConditionFunc := func(c *assert.CollectT) {
+			result, ok := <-resultChan
+			require.True(c, ok, "The goroutine should send a result")
 
-		_, ok = <-resultChan
-		require.False(c, ok, "The channel should be closed")
-	}
+			require.Empty(c, result.line, "No line should be read")
+			require.ErrorIs(c, result.err, context.DeadlineExceeded)
 
-	require.EventuallyWithT(t, idempotentConditionFunc, timeoutForTest, tickDuration)
+			_, ok = <-resultChan
+			require.False(c, ok, "The channel should be closed")
+		}
+
+		require.EventuallyWithT(t, idempotentConditionFunc, timeoutForTest, tickDuration)
+	})
+
+	// Verifies that [testState.writeLineWithTimeout] does not block
+	// indefinitely when a line cannot be written.
+	t.Run("TestWriteLine", func(t *testing.T) {
+		t.Parallel()
+
+		const timeoutForRead = time.Millisecond * 50
+		const timeoutForTest = time.Millisecond * 100
+		const tickDuration = time.Millisecond * 10
+
+		errChan := make(chan error)
+
+		go func() {
+			defer close(errChan)
+
+			h := makeTestState(t)
+			h.readWriteTimeout = timeoutForRead
+
+			err := h.writeLineWithTimeout("foo")
+			errChan <- err
+		}()
+
+		// This closure will be run periodically until time runs out or until all of
+		// its assertions pass.
+		idempotentConditionFunc := func(c *assert.CollectT) {
+			err, ok := <-errChan
+			require.True(c, ok, "The goroutine should send a result")
+
+			require.ErrorIs(c, err, context.DeadlineExceeded)
+
+			_, ok = <-errChan
+			require.False(c, ok, "The channel should be closed")
+		}
+
+		require.EventuallyWithT(t, idempotentConditionFunc, timeoutForTest, tickDuration)
+	})
 }
 
 // TestMain drives the tests
