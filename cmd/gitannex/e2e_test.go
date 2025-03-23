@@ -14,6 +14,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/rclone/rclone/cmd/gitannex/configs"
 	"github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fstest"
 	"github.com/rclone/rclone/lib/buildinfo"
@@ -228,7 +229,7 @@ func skipE2eTestIfNecessary(t *testing.T) {
 func TestEndToEnd(t *testing.T) {
 	skipE2eTestIfNecessary(t)
 
-	for _, mode := range allLayoutModes() {
+	for _, mode := range configs.AllLayoutModes() {
 		mode := mode
 		t.Run(string(mode), func(t *testing.T) {
 			t.Parallel()
@@ -257,7 +258,7 @@ func TestEndToEndMigration(t *testing.T) {
 		t.Skipf("Skipping because git-annex-remote-rclone was not found: %s", err)
 	}
 
-	for _, mode := range allLayoutModes() {
+	for _, mode := range configs.AllLayoutModes() {
 		mode := mode
 		t.Run(string(mode), func(t *testing.T) {
 			t.Parallel()
@@ -317,7 +318,7 @@ func TestEndToEndRepoLayoutCompat(t *testing.T) {
 		t.Skipf("Skipping because git-annex-remote-rclone was not found: %s", err)
 	}
 
-	for _, mode := range allLayoutModes() {
+	for _, mode := range configs.AllLayoutModes() {
 		mode := mode
 		t.Run(string(mode), func(t *testing.T) {
 			t.Parallel()

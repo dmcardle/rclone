@@ -1,4 +1,4 @@
-package gitannex
+package configs
 
 import (
 	"fmt"
@@ -10,6 +10,72 @@ import (
 	"github.com/rclone/rclone/fs/fspath"
 )
 
+type Relay interface {
+	QueryConfig(name string) (string, error)
+}
+
+type ParsedConfigs struct {
+	RemoteName string
+	Prefix     string
+	Layout     layoutMode
+}
+
+func (p *ParsedConfigs) setValue(id configID, value string) error {
+	switch id {
+	case configRemoteName:
+		if err := validateRemoteName(value); err != nil {
+			return err
+		}
+		p.RemoteName = value
+		return nil
+	case configPrefix:
+		p.Prefix = value
+		return nil
+	case configLayout:
+		mode := parseLayoutMode(value)
+		if mode == layoutModeUnknown {
+			return fmt.Errorf("unknown layout mode: %s", value)
+		}
+		p.Layout = mode
+		return nil
+	}
+	panic(fmt.Errorf("unhandled configId: %v", id))
+}
+
+func TryParseConfigs(relay Relay) (*ParsedConfigs, error) {
+	var parsed ParsedConfigs
+
+queryNextConfig:
+	for _, config := range requiredConfigs {
+		// Try each of the config's names in sequence, starting with the
+		// canonical name.
+		for _, configName := range config.names {
+			value, err := relay.QueryConfig(configName)
+			if err != nil {
+				return nil, err
+			}
+			if value == "" {
+				continue // Try the next synonym
+			}
+			if err := parsed.setValue(config.id, value); err != nil {
+				return nil, err
+			}
+			continue queryNextConfig
+		}
+		if config.defaultValue == "" {
+			return nil, fmt.Errorf("did not receive a non-empty config value for %q", config.GetCanonicalName())
+		}
+		if err := parsed.setValue(config.id, config.defaultValue); err != nil {
+			return nil, err
+		}
+	}
+	return &parsed, nil
+}
+
+func AllConfigs() []ConfigDefinition {
+	return slices.Clone(requiredConfigs)
+}
+
 type configID int
 
 const (
@@ -18,9 +84,9 @@ const (
 	configLayout
 )
 
-// configDefinition describes a configuration value required by this command. We
+// ConfigDefinition describes a configuration value required by this command. We
 // use "GETCONFIG" messages to query git-annex for these values at runtime.
-type configDefinition struct {
+type ConfigDefinition struct {
 	id           configID
 	names        []string
 	description  string
@@ -32,7 +98,7 @@ const (
 	defaultRcloneLayout = "nodir"
 )
 
-var requiredConfigs = []configDefinition{
+var requiredConfigs = []ConfigDefinition{
 	{
 		id:    configRemoteName,
 		names: []string{"rcloneremotename", "target"},
@@ -52,23 +118,23 @@ var requiredConfigs = []configDefinition{
 		id:    configLayout,
 		names: []string{"rclonelayout", "rclone_layout"},
 		description: "Defines where, within the rcloneprefix directory, rclone will write git-annex content. " +
-			fmt.Sprintf("Must be one of %v. ", allLayoutModes()) +
+			fmt.Sprintf("Must be one of %v. ", AllLayoutModes()) +
 			fmt.Sprintf("If empty, defaults to %q.", defaultRcloneLayout),
 		defaultValue: defaultRcloneLayout,
 	},
 }
 
-func (c *configDefinition) getCanonicalName() string {
+func (c *ConfigDefinition) GetCanonicalName() string {
 	if len(c.names) < 1 {
 		panic(fmt.Errorf("configDefinition must have at least one name: %v", c))
 	}
 	return c.names[0]
 }
 
-// fullDescription returns a single-line, human-readable description for this
+// FullDescription returns a single-line, human-readable description for this
 // config. The returned string begins with a list of synonyms and ends with
 // `c.description`.
-func (c *configDefinition) fullDescription() string {
+func (c *ConfigDefinition) FullDescription() string {
 	if len(c.names) <= 1 {
 		return c.description
 	}

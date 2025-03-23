@@ -1,4 +1,4 @@
-package gitannex
+package configs
 
 import (
 	"fmt"
@@ -11,6 +11,7 @@ type layoutMode string
 
 // All layout modes from git-annex-remote-rclone are supported.
 const (
+	DefaultLayoutMode     layoutMode = layoutModeNodir
 	layoutModeLower       layoutMode = "lower"
 	layoutModeDirectory   layoutMode = "directory"
 	layoutModeNodir       layoutMode = "nodir"
@@ -19,7 +20,7 @@ const (
 	layoutModeUnknown     layoutMode = ""
 )
 
-func allLayoutModes() []layoutMode {
+func AllLayoutModes() []layoutMode {
 	return []layoutMode{
 		layoutModeLower,
 		layoutModeDirectory,
@@ -30,7 +31,7 @@ func allLayoutModes() []layoutMode {
 }
 
 func parseLayoutMode(mode string) layoutMode {
-	for _, knownMode := range allLayoutModes() {
+	for _, knownMode := range AllLayoutModes() {
 		if mode == string(knownMode) {
 			return knownMode
 		}
@@ -40,7 +41,7 @@ func parseLayoutMode(mode string) layoutMode {
 
 type queryDirhashFunc func(msg string) (string, error)
 
-func buildFsString(queryDirhash queryDirhashFunc, mode layoutMode, key, remoteName, prefix string) (string, error) {
+func BuildFsString(queryDirhash queryDirhashFunc, mode layoutMode, key, remoteName, prefix string) (string, error) {
 	remoteName = strings.TrimSuffix(remoteName, ":") + ":"
 	remoteString := fspath.JoinRootPath(remoteName, prefix)
 

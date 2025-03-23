@@ -16,6 +16,7 @@ import (
 	// Without this import, the various backends would be unavailable. It looks
 	// unused, but the act of importing runs the package's `init()` function.
 	_ "github.com/rclone/rclone/backend/all"
+	"github.com/rclone/rclone/cmd/gitannex/configs"
 	"github.com/rclone/rclone/cmd/gitannex/messages"
 
 	"github.com/rclone/rclone/fs/fspath"
@@ -43,51 +44,6 @@ func TestFixArgsForSymlinkCorrectName(t *testing.T) {
 	assert.Equal(t,
 		maybeTransformArgs([]string{"/path/to/git-annex-remote-rclone-builtin"}),
 		[]string{"/path/to/git-annex-remote-rclone-builtin", "gitannex"})
-}
-
-func TestConfigDefinitionOneName(t *testing.T) {
-	configFoo := configDefinition{
-		names:        []string{"foo"},
-		description:  "The foo config is utterly useless.",
-		defaultValue: "abc",
-	}
-
-	assert.Equal(t, "foo",
-		configFoo.getCanonicalName())
-
-	assert.Equal(t,
-		configFoo.description,
-		configFoo.fullDescription())
-}
-
-func TestConfigDefinitionTwoNames(t *testing.T) {
-	configFoo := configDefinition{
-		names:        []string{"foo", "bar"},
-		description:  "The foo config is utterly useless.",
-		defaultValue: "abc",
-	}
-
-	assert.Equal(t, "foo",
-		configFoo.getCanonicalName())
-
-	assert.Equal(t,
-		"(synonyms: bar) The foo config is utterly useless.",
-		configFoo.fullDescription())
-}
-
-func TestConfigDefinitionThreeNames(t *testing.T) {
-	configFoo := configDefinition{
-		names:        []string{"foo", "bar", "baz"},
-		description:  "The foo config is utterly useless.",
-		defaultValue: "abc",
-	}
-
-	assert.Equal(t, "foo",
-		configFoo.getCanonicalName())
-
-	assert.Equal(t,
-		`(synonyms: bar, baz) The foo config is utterly useless.`,
-		configFoo.fullDescription())
 }
 
 type testState struct {
@@ -200,10 +156,12 @@ func (h *testState) requireWriteLine(line string) {
 // Preconfigure the handle. This enables the calling test to skip the PREPARE
 // handshake.
 func (h *testState) preconfigureServer() {
-	h.server.configRcloneRemoteName = h.remoteName
-	h.server.configPrefix = h.remotePrefix
-	h.server.configRcloneLayout = string(layoutModeNodir)
-	h.server.configsDone = true
+	parsedConfigs := configs.ParsedConfigs{
+		RemoteName: h.remoteName,
+		Prefix:     h.remotePrefix,
+		Layout:     configs.DefaultLayoutMode,
+	}
+	h.server.configsParsed = &parsedConfigs
 }
 
 // Drop-in replacement for `filepath.Rel()` that works around a Windows-specific
@@ -364,9 +322,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("VALUE frankencase")
 			h.requireReadLineExact("PREPARE-SUCCESS")
 
-			require.Equal(t, h.server.configRcloneRemoteName, h.remoteName)
-			require.Equal(t, h.server.configPrefix, h.remotePrefix)
-			require.True(t, h.server.configsDone)
+			require.NotNil(t, h.server.configsParsed)
+			require.Equal(t, h.server.configsParsed.RemoteName, h.remoteName)
+			require.Equal(t, h.server.configsParsed.Prefix, h.remotePrefix)
 		},
 	},
 	{
@@ -385,14 +343,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("VALUE " + h.remotePrefix)
 			h.requireReadLineExact("GETCONFIG rclonelayout")
 			h.requireWriteLine("VALUE nonexistentLayoutMode")
-			h.requireReadLineExact("PREPARE-SUCCESS")
+			h.requireReadLineExact("PREPARE-FAILURE Error getting configs: unknown layout mode: nonexistentLayoutMode")
 
-			require.Equal(t, h.server.configRcloneRemoteName, h.remoteName)
-			require.Equal(t, h.server.configPrefix, h.remotePrefix)
-			require.True(t, h.server.configsDone)
-
-			h.requireWriteLine("INITREMOTE")
-			h.requireReadLineExact("INITREMOTE-FAILURE unknown layout mode: nonexistentLayoutMode")
+			require.Nil(t, h.server.configsParsed)
 		},
 		expectedError: "unknown layout mode: nonexistentLayoutMode",
 	},
@@ -408,18 +361,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("PREPARE")
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("VALUE thisRemoteDoesNotExist")
-			h.requireReadLineExact("GETCONFIG rcloneprefix")
-			h.requireWriteLine("VALUE " + h.remotePrefix)
-			h.requireReadLineExact("GETCONFIG rclonelayout")
-			h.requireWriteLine("VALUE frankencase")
-			h.requireReadLineExact("PREPARE-SUCCESS")
+			h.requireReadLineExact("PREPARE-FAILURE Error getting configs: remote does not exist or incorrectly contains a path: thisRemoteDoesNotExist")
 
-			require.Equal(t, h.server.configRcloneRemoteName, "thisRemoteDoesNotExist")
-			require.Equal(t, h.server.configPrefix, h.remotePrefix)
-			require.True(t, h.server.configsDone)
-
-			h.requireWriteLine("INITREMOTE")
-			h.requireReadLineExact("INITREMOTE-FAILURE remote does not exist or incorrectly contains a path: thisRemoteDoesNotExist")
+			require.Nil(t, h.server.configsParsed)
 		},
 		expectedError: "remote does not exist or incorrectly contains a path: thisRemoteDoesNotExist",
 	},
@@ -435,22 +379,13 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("PREPARE")
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("VALUE " + h.remotePrefix)
-			h.requireReadLineExact("GETCONFIG rcloneprefix")
-			h.requireWriteLine("VALUE /foo")
-			h.requireReadLineExact("GETCONFIG rclonelayout")
-			h.requireWriteLine("VALUE frankencase")
-			h.requireReadLineExact("PREPARE-SUCCESS")
-
-			require.Equal(t, h.server.configRcloneRemoteName, h.remotePrefix)
-			require.Equal(t, h.server.configPrefix, "/foo")
-			require.True(t, h.server.configsDone)
-
-			h.requireWriteLine("INITREMOTE")
 
 			require.Regexp(t,
-				regexp.MustCompile("^INITREMOTE-FAILURE remote does not exist or incorrectly contains a path: "),
+				regexp.MustCompile("^PREPARE-FAILURE Error getting configs: remote does not exist or incorrectly contains a path: "),
 				h.requireReadLine(),
 			)
+
+			require.Nil(t, h.server.configsParsed)
 		},
 		expectedError: "remote does not exist or incorrectly contains a path:",
 	},
@@ -461,18 +396,8 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("PREPARE")
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("VALUE :nonexistentBackend:")
-			h.requireReadLineExact("GETCONFIG rcloneprefix")
-			h.requireWriteLine("VALUE /foo")
-			h.requireReadLineExact("GETCONFIG rclonelayout")
-			h.requireWriteLine("VALUE frankencase")
-			h.requireReadLineExact("PREPARE-SUCCESS")
-
-			require.Equal(t, ":nonexistentBackend:", h.server.configRcloneRemoteName)
-			require.Equal(t, "/foo", h.server.configPrefix)
-			require.True(t, h.server.configsDone)
-
-			h.requireWriteLine("INITREMOTE")
-			h.requireReadLineExact("INITREMOTE-FAILURE backend does not exist: nonexistentBackend")
+			h.requireReadLineExact("PREPARE-FAILURE Error getting configs: backend does not exist: nonexistentBackend")
+			require.Nil(t, h.server.configsParsed)
 		},
 		expectedError: "backend does not exist:",
 	},
@@ -489,9 +414,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("VALUE frankencase")
 			h.requireReadLineExact("PREPARE-SUCCESS")
 
-			require.Equal(t, ":local:", h.server.configRcloneRemoteName)
-			require.Equal(t, "/foo", h.server.configPrefix)
-			require.True(t, h.server.configsDone)
+			require.NotNil(t, h.server.configsParsed)
+			require.Equal(t, ":local:", h.server.configsParsed.RemoteName)
+			require.Equal(t, "/foo", h.server.configsParsed.Prefix)
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
@@ -504,18 +429,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("PREPARE")
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("VALUE :local")
-			h.requireReadLineExact("GETCONFIG rcloneprefix")
-			h.requireWriteLine("VALUE /foo")
-			h.requireReadLineExact("GETCONFIG rclonelayout")
-			h.requireWriteLine("VALUE frankencase")
-			h.requireReadLineExact("PREPARE-SUCCESS")
+			h.requireReadLineExact("PREPARE-FAILURE Error getting configs: remote could not be parsed: :local")
 
-			require.Equal(t, ":local", h.server.configRcloneRemoteName)
-			require.Equal(t, "/foo", h.server.configPrefix)
-			require.True(t, h.server.configsDone)
-
-			h.requireWriteLine("INITREMOTE")
-			h.requireReadLineExact("INITREMOTE-FAILURE remote could not be parsed: :local")
+			require.Nil(t, h.server.configsParsed)
 		},
 		expectedError: "remote could not be parsed:",
 	},
@@ -532,9 +448,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("VALUE frankencase")
 			h.requireReadLineExact("PREPARE-SUCCESS")
 
-			require.Equal(t, ":local,description=banana:", h.server.configRcloneRemoteName)
-			require.Equal(t, "/foo", h.server.configPrefix)
-			require.True(t, h.server.configsDone)
+			require.NotNil(t, h.server.configsParsed)
+			require.Equal(t, ":local,description=banana:", h.server.configsParsed.RemoteName)
+			require.Equal(t, "/foo", h.server.configsParsed.Prefix)
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
@@ -547,18 +463,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("PREPARE")
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("VALUE :local,description=banana:/bad/path")
-			h.requireReadLineExact("GETCONFIG rcloneprefix")
-			h.requireWriteLine("VALUE /foo")
-			h.requireReadLineExact("GETCONFIG rclonelayout")
-			h.requireWriteLine("VALUE frankencase")
-			h.requireReadLineExact("PREPARE-SUCCESS")
+			h.requireReadLineExact("PREPARE-FAILURE Error getting configs: remote does not exist or incorrectly contains a path: :local,description=banana:/bad/path")
 
-			require.Equal(t, ":local,description=banana:/bad/path", h.server.configRcloneRemoteName)
-			require.Equal(t, "/foo", h.server.configPrefix)
-			require.True(t, h.server.configsDone)
-
-			h.requireWriteLine("INITREMOTE")
-			h.requireReadLineExact("INITREMOTE-FAILURE remote does not exist or incorrectly contains a path: :local,description=banana:/bad/path")
+			require.Nil(t, h.server.configsParsed)
 		},
 		expectedError: "remote does not exist or incorrectly contains a path:",
 	},
@@ -579,9 +486,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("VALUE frankencase")
 			h.requireReadLineExact("PREPARE-SUCCESS")
 
-			require.Equal(t, "fake_remote,banana=yes:", h.server.configRcloneRemoteName)
-			require.Equal(t, "/foo", h.server.configPrefix)
-			require.True(t, h.server.configsDone)
+			require.NotNil(t, h.server.configsParsed)
+			require.Equal(t, "fake_remote,banana=yes:", h.server.configsParsed.RemoteName)
+			require.Equal(t, "/foo", h.server.configsParsed.Prefix)
 
 			h.requireWriteLine("INITREMOTE")
 			h.requireReadLineExact("INITREMOTE-SUCCESS")
@@ -609,13 +516,13 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("VALUE frankencase")
 			h.requireReadLineExact("PREPARE-SUCCESS")
 
-			require.Equal(t, h.server.configRcloneRemoteName, h.remoteName)
-			require.Equal(t, h.server.configPrefix, h.remotePrefix)
-			require.True(t, h.server.configsDone)
+			require.NotNil(t, h.server.configsParsed)
+			require.Equal(t, h.server.configsParsed.RemoteName, h.remoteName)
+			require.Equal(t, h.server.configsParsed.Prefix, h.remotePrefix)
 		},
 	},
 	{
-		label: "HandlesPrepareAndDoesNotTrimWhitespaceFromValue",
+		label: "HandlesPrepareAndDoesNotTrimWhitespaceFromRemoteName",
 		testProtocolFunc: func(t *testing.T, h *testState) {
 			h.requireReadLineExact("VERSION 1")
 			h.requireWriteLine("EXTENSIONS INFO") // Advertise that we support the INFO extension
@@ -627,23 +534,42 @@ var fstestTestCases = []testCase{
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 
 			remoteNameWithSpaces := fmt.Sprintf(" %s ", h.remoteName)
-			prefixWithWhitespace := fmt.Sprintf(" %s\t", h.remotePrefix)
 
 			h.requireWriteLine(fmt.Sprintf("VALUE %s", remoteNameWithSpaces))
 
+			require.Regexp(t,
+				regexp.MustCompile("^PREPARE-FAILURE Error getting configs: remote could not be parsed:  "),
+				h.requireReadLine(),
+			)
+
+			require.Nil(t, h.server.configsParsed)
+		},
+		expectedError: "error getting configs: remote could not be parsed:  ",
+	},
+	{
+		label: "HandlesPrepareAndDoesNotTrimWhitespaceFromPrefix",
+		testProtocolFunc: func(t *testing.T, h *testState) {
+			h.requireReadLineExact("VERSION 1")
+			h.requireWriteLine("EXTENSIONS INFO") // Advertise that we support the INFO extension
+			h.requireReadLineExact("EXTENSIONS")
+
+			require.True(t, h.server.extensionInfo)
+
+			h.requireWriteLine("PREPARE")
+			h.requireReadLineExact("GETCONFIG rcloneremotename")
+			h.requireWriteLine("VALUE " + h.remoteName)
 			h.requireReadLineExact("GETCONFIG rcloneprefix")
+
+			prefixWithWhitespace := fmt.Sprintf(" %s\t", h.remotePrefix)
 			h.requireWriteLine(fmt.Sprintf("VALUE %s", prefixWithWhitespace))
 
 			h.requireReadLineExact("GETCONFIG rclonelayout")
-			h.requireWriteLine("VALUE")
-			h.requireReadLineExact("GETCONFIG rclone_layout")
-			h.requireWriteLine("VALUE")
-
+			h.requireWriteLine("VALUE frankencase")
 			h.requireReadLineExact("PREPARE-SUCCESS")
 
-			require.Equal(t, h.server.configRcloneRemoteName, remoteNameWithSpaces)
-			require.Equal(t, h.server.configPrefix, prefixWithWhitespace)
-			require.True(t, h.server.configsDone)
+			require.NotNil(t, h.server.configsParsed)
+			require.Equal(t, h.server.configsParsed.RemoteName, h.remoteName)
+			require.Equal(t, h.server.configsParsed.Prefix, prefixWithWhitespace)
 		},
 	},
 	{
@@ -669,9 +595,9 @@ var fstestTestCases = []testCase{
 			h.requireWriteLine("PREPARE")
 			h.requireReadLineExact("GETCONFIG rcloneremotename")
 			h.requireWriteLine("ERROR ineffable error")
-			h.requireReadLineExact("PREPARE-FAILURE Error getting configs")
+			h.requireReadLineExact("PREPARE-FAILURE Error getting configs: failed to parse config value: ERROR ineffable error")
 		},
-		expectedError: "failed to parse config value: ERROR ineffable error",
+		expectedError: "error getting configs: failed to parse config value: ERROR ineffable error",
 	},
 	{
 		label: "TransferStoreEmptyPath",

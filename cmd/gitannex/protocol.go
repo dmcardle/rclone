@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/rclone/rclone/cmd/gitannex/configs"
 	"github.com/rclone/rclone/cmd/gitannex/messages"
 	"github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fs/cache"
@@ -21,10 +22,7 @@ type server struct {
 	extensionGetGitRemoteName    bool
 	extensionUnavailableResponse bool
 
-	configsDone            bool
-	configPrefix           string
-	configRcloneRemoteName string
-	configRcloneLayout     string
+	configsParsed *configs.ParsedConfigs
 }
 
 func (s *server) sendMsg(msg string) {
@@ -118,77 +116,44 @@ func (s *server) handleInitRemote() error {
 		return fmt.Errorf("failed to get configs: %w", err)
 	}
 
-	if err := validateRemoteName(s.configRcloneRemoteName); err != nil {
-		s.sendMsg(fmt.Sprintf("INITREMOTE-FAILURE %s", err))
-		return fmt.Errorf("failed to init remote: %w", err)
-	}
-
-	if mode := parseLayoutMode(s.configRcloneLayout); mode == layoutModeUnknown {
-		err := fmt.Errorf("unknown layout mode: %s", s.configRcloneLayout)
-		s.sendMsg(fmt.Sprintf("INITREMOTE-FAILURE %s", err))
-		return fmt.Errorf("failed to init remote: %w", err)
-	}
-
 	s.sendMsg("INITREMOTE-SUCCESS")
 	return nil
 }
 
-func (s *server) mustSetConfigValue(id configID, value string) {
-	switch id {
-	case configRemoteName:
-		s.configRcloneRemoteName = value
-	case configPrefix:
-		s.configPrefix = value
-	case configLayout:
-		s.configRcloneLayout = value
-	default:
-		panic(fmt.Errorf("unhandled configId: %v", id))
+func (s *server) QueryConfig(configName string) (string, error) {
+	s.sendMsg(fmt.Sprintf("GETCONFIG %s", configName))
+
+	message, err := s.getMsg()
+	if err != nil {
+		return "", err
 	}
+
+	valueKeyword, err := message.NextSpaceDelimitedParameter()
+	if err != nil || valueKeyword != "VALUE" {
+		return "", fmt.Errorf("failed to parse config value: %s", message.OriginalMessage())
+	}
+
+	return message.FinalParameter(), nil
 }
 
 // Query git-annex for config values.
 func (s *server) queryConfigs() error {
-	if s.configsDone {
+	if s.configsParsed != nil {
 		return nil
 	}
 
-	// Send a "GETCONFIG" message for each required config and parse git-annex's
-	// "VALUE" response.
-queryNextConfig:
-	for _, config := range requiredConfigs {
-		// Try each of the config's names in sequence, starting with the
-		// canonical name.
-		for _, configName := range config.names {
-			s.sendMsg(fmt.Sprintf("GETCONFIG %s", configName))
-
-			message, err := s.getMsg()
-			if err != nil {
-				return err
-			}
-
-			valueKeyword, err := message.NextSpaceDelimitedParameter()
-			if err != nil || valueKeyword != "VALUE" {
-				return fmt.Errorf("failed to parse config value: %s", message.OriginalMessage())
-			}
-
-			if value := message.FinalParameter(); value != "" {
-				s.mustSetConfigValue(config.id, value)
-				continue queryNextConfig
-			}
-		}
-		if config.defaultValue == "" {
-			return fmt.Errorf("did not receive a non-empty config value for %q", config.getCanonicalName())
-		}
-		s.mustSetConfigValue(config.id, config.defaultValue)
+	parsedConfigs, err := configs.TryParseConfigs(s)
+	if err != nil {
+		return err
 	}
+	s.configsParsed = parsedConfigs
 
-	s.configsDone = true
 	return nil
 }
 
 func (s *server) handlePrepare() error {
 	if err := s.queryConfigs(); err != nil {
-		s.sendMsg("PREPARE-FAILURE Error getting configs")
+		s.sendMsg(fmt.Sprintf("PREPARE-FAILURE Error getting configs: %s", err))
 		return fmt.Errorf("error getting configs: %w", err)
 	}
 	s.sendMsg("PREPARE-SUCCESS")
@@ -198,8 +163,8 @@ func (s *server) handlePrepare() error {
 // Git-annex is asking us to return the list of settings that we use. Keep this
 // in sync with `handlePrepare()`.
 func (s *server) handleListConfigs() {
-	for _, config := range requiredConfigs {
-		s.sendMsg(fmt.Sprintf("CONFIG %s %s", config.getCanonicalName(), config.fullDescription()))
+	for _, config := range configs.AllConfigs() {
+		s.sendMsg(fmt.Sprintf("CONFIG %s %s", config.GetCanonicalName(), config.FullDescription()))
 	}
 	s.sendMsg("CONFIGEND")
 }
@@ -226,13 +191,7 @@ func (s *server) handleTransfer(message *messages.MessageParser) error {
 		return fmt.Errorf("error getting configs: %w", err)
 	}
 
-	layout := parseLayoutMode(s.configRcloneLayout)
-	if layout == layoutModeUnknown {
-		s.sendMsg(fmt.Sprintf("TRANSFER-FAILURE %s", argKey))
-		return fmt.Errorf("error parsing layout mode: %q", s.configRcloneLayout)
-	}
-
-	remoteFsString, err := buildFsString(s.queryDirhash, layout, argKey, s.configRcloneRemoteName, s.configPrefix)
+	remoteFsString, err := configs.BuildFsString(s.queryDirhash, s.configsParsed.Layout, argKey, s.configsParsed.RemoteName, s.configsParsed.Prefix)
 	if err != nil {
 		s.sendMsg(fmt.Sprintf("TRANSFER-FAILURE %s", argKey))
 		return fmt.Errorf("error building fs string: %w", err)
@@ -295,13 +254,7 @@ func (s *server) handleCheckPresent(message *messages.MessageParser) error {
 		return fmt.Errorf("error getting configs: %s", err)
 	}
 
-	layout := parseLayoutMode(s.configRcloneLayout)
-	if layout == layoutModeUnknown {
-		s.sendMsg(fmt.Sprintf("CHECKPRESENT-FAILURE %s", argKey))
-		return fmt.Errorf("error parsing layout mode: %q", s.configRcloneLayout)
-	}
-
-	remoteFsString, err := buildFsString(s.queryDirhash, layout, argKey, s.configRcloneRemoteName, s.configPrefix)
+	remoteFsString, err := configs.BuildFsString(s.queryDirhash, s.configsParsed.Layout, argKey, s.configsParsed.RemoteName, s.configsParsed.Prefix)
 	if err != nil {
 		s.sendMsg(fmt.Sprintf("CHECKPRESENT-FAILURE %s", argKey))
 		return fmt.Errorf("error building fs string: %w", err)
@@ -353,13 +306,7 @@ func (s *server) handleRemove(message *messages.MessageParser) error {
 		return errors.New("failed to parse key for REMOVE")
 	}
 
-	layout := parseLayoutMode(s.configRcloneLayout)
-	if layout == layoutModeUnknown {
-		s.sendMsg(fmt.Sprintf("REMOVE-FAILURE %s", argKey))
-		return fmt.Errorf("error parsing layout mode: %q", s.configRcloneLayout)
-	}
-
-	remoteFsString, err := buildFsString(s.queryDirhash, layout, argKey, s.configRcloneRemoteName, s.configPrefix)
+	remoteFsString, err := configs.BuildFsString(s.queryDirhash, s.configsParsed.Layout, argKey, s.configsParsed.RemoteName, s.configsParsed.Prefix)
 	if err != nil {
 		s.sendMsg(fmt.Sprintf("REMOVE-FAILURE %s", argKey))
 		return fmt.Errorf("error building fs string: %w", err)
