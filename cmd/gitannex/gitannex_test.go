@@ -16,6 +16,7 @@ import (
 	// Without this import, the various backends would be unavailable. It looks
 	// unused, but the act of importing runs the package's `init()` function.
 	_ "github.com/rclone/rclone/backend/all"
+	"github.com/rclone/rclone/cmd/gitannex/messages"
 
 	"github.com/rclone/rclone/fs/fspath"
 	"github.com/rclone/rclone/fstest"
@@ -42,148 +43,6 @@ func TestFixArgsForSymlinkCorrectName(t *testing.T) {
 	assert.Equal(t,
 		maybeTransformArgs([]string{"/path/to/git-annex-remote-rclone-builtin"}),
 		[]string{"/path/to/git-annex-remote-rclone-builtin", "gitannex"})
-}
-
-type messageParserTestCase struct {
-	label    string
-	testFunc func(*testing.T)
-}
-
-var messageParserTestCases = []messageParserTestCase{
-	{
-		"OneParam",
-		func(t *testing.T) {
-			m := messageParser{"foo\n"}
-
-			param, err := m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "foo")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.Error(t, err)
-			assert.Equal(t, param, "")
-
-			param = m.finalParameter()
-			assert.Equal(t, param, "")
-
-			param = m.finalParameter()
-			assert.Equal(t, param, "")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.Error(t, err)
-			assert.Equal(t, param, "")
-		},
-	},
-	{
-		"TwoParams",
-		func(t *testing.T) {
-			m := messageParser{"foo bar\n"}
-
-			param, err := m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "foo")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "bar")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.Error(t, err)
-			assert.Equal(t, param, "")
-
-			param = m.finalParameter()
-			assert.Equal(t, param, "")
-		},
-	},
-	{
-		"TwoParamsNoTrailingNewline",
-		func(t *testing.T) {
-			m := messageParser{"foo bar"}
-
-			param, err := m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "foo")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "bar")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.Error(t, err)
-			assert.Equal(t, param, "")
-
-			param = m.finalParameter()
-			assert.Equal(t, param, "")
-		},
-	},
-	{
-		"ThreeParamsWhereFinalParamContainsSpaces",
-		func(t *testing.T) {
-			m := messageParser{"firstparam secondparam final param with spaces"}
-
-			param, err := m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "firstparam")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "secondparam")
-
-			param = m.finalParameter()
-			assert.Equal(t, param, "final param with spaces")
-		},
-	},
-	{
-		"OneLongFinalParameter",
-		func(t *testing.T) {
-			for _, lineEnding := range []string{"", "\n", "\r", "\r\n", "\n\r"} {
-				testName := fmt.Sprintf("lineEnding%x", lineEnding)
-
-				t.Run(testName, func(t *testing.T) {
-					m := messageParser{"one long final parameter" + lineEnding}
-
-					param := m.finalParameter()
-					assert.Equal(t, param, "one long final parameter")
-
-					param = m.finalParameter()
-					assert.Equal(t, param, "")
-				})
-			}
-		},
-	},
-	{
-		"MultipleSpaces",
-		func(t *testing.T) {
-			m := messageParser{"foo  bar\n\r"}
-
-			param, err := m.nextSpaceDelimitedParameter()
-			assert.NoError(t, err)
-			assert.Equal(t, param, "foo")
-
-			param, err = m.nextSpaceDelimitedParameter()
-			assert.Error(t, err, "blah")
-			assert.Equal(t, param, "")
-		},
-	},
-	{
-		"StartsWithSpace",
-		func(t *testing.T) {
-			m := messageParser{" foo"}
-
-			param, err := m.nextSpaceDelimitedParameter()
-			assert.Error(t, err, "blah")
-			assert.Equal(t, param, "")
-		},
-	},
-}
-
-func TestMessageParser(t *testing.T) {
-	for _, testCase := range messageParserTestCases {
-		t.Run(testCase.label, func(t *testing.T) {
-			t.Parallel()
-			testCase.testFunc(t)
-		})
-	}
 }
 
 func TestConfigDefinitionOneName(t *testing.T) {
@@ -252,8 +111,7 @@ func makeTestState(t *testing.T) testState {
 	return testState{
 		t: t,
 		server: &server{
-			reader: bufio.NewReader(stdinR),
-			writer: stdoutW,
+			transceiver: messages.NewTransceiver(bufio.NewReader(stdinR), stdoutW, verboseTranscriptStderr),
 		},
 		mockStdinW:       stdinW,
 		mockStdoutReader: bufio.NewReader(stdoutR),
